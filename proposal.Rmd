@@ -2,7 +2,7 @@
 
 ## Research topic
 
-The first sentence in the proposal. 
+The first sentence. 
 
 ## Data availability
 
