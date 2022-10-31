@@ -1,8 +1,8 @@
 # Proposal
 
 ## Research topic
-Labor stat
-hi
-qs
+
+The first sentence in the proposal. 
+
 ## Data availability
 
