@@ -1,5 +1,5 @@
 --- 
-title: "Labor Statistics"
+title: "Analysis on U.S. Unemployment and Inflation Data Pre- and Post-Pandemic"
 author: "Yuxiao Liu, Peishan Lyu, Fan Wu"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
