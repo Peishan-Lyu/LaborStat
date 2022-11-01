@@ -10,14 +10,16 @@ Despite the “full employment”, the U.S. economy still faces challenges. Runa
 
 For people who follow the economy closely, all of the above may sound very familiar, but this phenomenal time period deserves a closer inspection that adds insights from more aspects in addition to the general trend. We are interested in these questions below:
 
-* Unemployment rates of which sectors of the economy was impacted the most during early-pandemic, and which ones have shielded from the impact?
-* Unemployment rates of which sectors of the economy had the quickest recovery, and which sectors lagged behind?
-* Are there demographic disparities in terms of pandemic-caused unemployment?
-* Did people switch from full-time jobs to part-time jobs sometime during the pandemic?
-* Which sectors enjoyed the biggest wage raises?
-* Which consumption categories had the biggest price increases?
+* Which sectors had the sharpest increase in unemployment rate during early-pandemic, and which ones were shielded from the impact?
+* Which sectors had the quickest recovery, and which sectors lagged behind?
+* Were there demographic (age, sex, race) disparities in pandemic-caused unemployment?
+* How was labor force participation rate affected?
+* Which people switch from full-time jobs to part-time jobs during the pandemic?
+* Which sectors enjoyed the biggest wage raises during the high inflation period, and which sectors were stagnant?
+* Were there demographic (age, sex, race) disparities in wage raises during the high inflation period?
+
 
 
 ## Data availability
 
-Some data
+
