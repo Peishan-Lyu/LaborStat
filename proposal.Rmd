@@ -2,7 +2,21 @@
 
 ## Research topic
 
-Some proposal
+The past few years have witnessed perhaps the most dramatic swings in some of the key macroeconomic readings of the United States.
+
+In 2019, unemployment rate reached multi-decade low at ~3.6% percent, after a long and steady downward ride from the ~10% level seen in the last Financial Crisis. The trend was then abruptly reversed due to the sudden outbreak of the COVID-19 pandemic which led to massive shut-downs and unemployment rate skyrocketing to 13%, the highest level in record. More dramatically, the transient peak in unemployment rate was quickly resolved, largely thankful to the Federal Reserve’s large-scale quantitative easing. As of recent, the U.S. nationwide unemployment rate is at 3.57%, another multi-decade low, below the pre-pandemic levels.
+
+Despite the “full employment”, the U.S. economy still faces challenges. Runaway inflation is frequently appearing in the news headlines, despite the Federal Reserve reversing course. Salaries have also had rapid raises. These combined together are affecting everyone’s life and thoughts.
+
+For people who follow the economy closely, all of the above may sound very familiar, but this phenomenal time period deserves a closer inspection that adds insights from more aspects in addition to the general trend. We are interested in these questions below:
+
+* Unemployment rates of which sectors of the economy was impacted the most during early-pandemic, and which ones have shielded from the impact?
+* Unemployment rates of which sectors of the economy had the quickest recovery, and which sectors lagged behind?
+* Are there demographic disparities in terms of pandemic-caused unemployment?
+* Did people switch from full-time jobs to part-time jobs sometime during the pandemic?
+* Which sectors enjoyed the biggest wage raises?
+* Which consumption categories had the biggest price increases?
+
 
 ## Data availability
 
