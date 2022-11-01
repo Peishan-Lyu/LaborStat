@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Proposal | Analysis on U.S. Employment and Inflation Data Pre- and Post-Pandemic</title>
-  <meta name="description" content="Chapter 2 Proposal | Analysis on U.S. Employment and Inflation Data Pre- and Post-Pandemic" />
+  <title>Chapter 2 Proposal | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic</title>
+  <meta name="description" content="Chapter 2 Proposal | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Proposal | Analysis on U.S. Employment and Inflation Data Pre- and Post-Pandemic" />
+  <meta property="og:title" content="Chapter 2 Proposal | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Proposal | Analysis on U.S. Employment and Inflation Data Pre- and Post-Pandemic" />
+  <meta name="twitter:title" content="Chapter 2 Proposal | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
   
   
   
@@ -23,7 +23,7 @@
 <meta name="author" content="Yuxiao Liu, Peishan Lyu, Fan Wu" />
 
 
-<meta name="date" content="2022-10-31" />
+<meta name="date" content="2022-11-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -98,7 +98,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analysis on U.S. Employment and Inflation Data Pre- and Post-Pandemic</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic</a>
           </h1>
         </div>
 
@@ -115,17 +115,35 @@
 <p>Despite the “full employment”, the U.S. economy still faces challenges. Runaway inflation is frequently appearing in the news headlines, despite the Federal Reserve reversing course. Salaries have also had rapid raises. These combined together are affecting everyone’s life and thoughts.</p>
 <p>For people who follow the economy closely, all of the above may sound very familiar, but this phenomenal time period deserves a closer inspection that adds insights from more aspects in addition to the general trend. We are interested in these questions below:</p>
 <ul>
-<li>Unemployment rates of which sectors of the economy was impacted the most during early-pandemic, and which ones have shielded from the impact?</li>
-<li>Unemployment rates of which sectors of the economy had the quickest recovery, and which sectors lagged behind?</li>
-<li>Are there demographic disparities in terms of pandemic-caused unemployment?</li>
-<li>Did people switch from full-time jobs to part-time jobs sometime during the pandemic?</li>
-<li>Which sectors enjoyed the biggest wage raises?</li>
-<li>Which consumption categories had the biggest price increases?</li>
+<li>Which sectors had the sharpest increase in unemployment rate during early-pandemic, and which ones were shielded from the impact?</li>
+<li>Which sectors had the quickest recovery, and which sectors lagged behind?</li>
+<li>Were there demographic (age, sex, race) disparities in pandemic-caused unemployment?</li>
+<li>How was labor force participation rate affected?</li>
+<li>Which people switch from full-time jobs to part-time jobs during the pandemic?</li>
+<li>Which sectors enjoyed the biggest wage raises during the high inflation period, and which sectors were stagnant?</li>
+<li>Were there demographic (age, sex, race) disparities in wage raises during the high inflation period?</li>
 </ul>
 </div>
 <div id="data-availability" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Data availability<a href="proposal.html#data-availability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Some data</p>
+<p>To answer the questions in the previous section, we need periodic labor market statistics broken down into sectors, occupations, demographic groups, and the data should cover fields such as employment numbers, labor force numbers, earnings, and hours.</p>
+<p>A reliable data source that serves our purposes is the U.S Bureau of Labor Statistics (BLS). They maintain comprehensive labor market data, and update in monthly frequency.</p>
+<ul>
+<li>The BLS “Current Employment Statistics” section covers data of employment, earnings, and hours, broken down into sectors.
+<ul>
+<li>This data is available both in <a href="https://www.bls.gov/ces/data/employment-and-earnings/">tabular form</a> as well as from <a href="https://www.bls.gov/ces/data/employment-situation-table-download.htm">data retrieval tool in series forms</a>.</li>
+<li>The sector hierarchy is an 8-level structure. The retrieval tool is more flexible, and allows us to pick the level that represents a proper degree of granularity.</li>
+<li>In both ways, we need to download data files and then import into R.</li>
+</ul></li>
+<li>The BLS “Current Population Survey” section covers data of employed and unemployed, broken down into demographic groups (age, sex, and race) and occupations.
+<ul>
+<li>This data is available in <a href="https://www.bls.gov/cps/tables.htm">tabular form</a>.</li>
+<li>We need to download data files and then import into R.</li>
+</ul></li>
+</ul>
+<p>One limitation of the data source is that earnings and hours data is not available in “Current Population Survey”, thus demographic analysis can only be done on unemployment.</p>
+<p>Another minor limitation of the data source is its timeliness. The monthly data becomes available several weeks after month-end, and they stay in “preliminary” status for another two months.</p>
+<p>The BLS data quality should be good enough to serve our study purposes, because it is closely monitored by many people (e.g. other government agencies, financial institutions), and has been used for material purposes.</p>
 
 </div>
 </div>

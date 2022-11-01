@@ -22,4 +22,22 @@ For people who follow the economy closely, all of the above may sound very famil
 
 ## Data availability
 
+To answer the questions in the previous section, we need periodic labor market statistics broken down into sectors, occupations, demographic groups, and the data should cover fields such as employment numbers, labor force numbers, earnings, and hours.
+
+A reliable data source that serves our purposes is the U.S Bureau of Labor Statistics (BLS). They maintain comprehensive labor market data, and update in monthly frequency.
+
+* The BLS “Current Employment Statistics” section covers data of employment, earnings, and hours, broken down into sectors.
+  + This data is available both in [tabular form](https://www.bls.gov/ces/data/employment-and-earnings/) as well as from [data retrieval tool in series forms](https://www.bls.gov/ces/data/employment-situation-table-download.htm).
+  + The sector hierarchy is an 8-level structure. The retrieval tool is more flexible, and allows us to pick the level that represents a proper degree of granularity.
+  + In both ways, we need to download data files and then import into R.
+
+* The BLS “Current Population Survey” section covers data of employed and unemployed, broken down into demographic groups (age, sex, and race) and occupations.
+  + This data is available in [tabular form](https://www.bls.gov/cps/tables.htm).
+  + We need to download data files and then import into R.
+
+One limitation of the data source is that earnings and hours data is not available in BLS “Current Population Survey” section, thus demographic analysis can only be done on unemployment.
+
+Another minor limitation of the data source is its timeliness. The monthly data becomes available several weeks after month-end, and they stay in “preliminary” status for another two months.
+
+The BLS data quality should be good enough to serve our study purposes, because it is closely monitored by many people (e.g. other government agencies, financial institutions), and has been used for material purposes.
 
