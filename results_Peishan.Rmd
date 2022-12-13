@@ -1,0 +1,46 @@
+---
+title: "Results_Peishan"
+output: html_document
+date: "2022-12-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(tidyverse)
+```
+
+```{r pressure, echo=FALSE}
+# check categories in series name. 
+categories <- unique(Stats_by_Country_1972_2021$`Series Name`)
+head(categories)
+```
+```{r}
+# change column names - replace space by "_"
+colnames(Stats_by_Country_1972_2021) <- gsub(" ","_",colnames(Stats_by_Country_1972_2021))
+colnames(Stats_by_Country_1972_2021)
+```
+
+```{r}
+Country_afertillity <- Stats_by_Country_1972_2021 %>%
+  filter(Series_Name == "Adolescent fertility rate (births per 1,000 women ages 15-19)") %>%
+  select(-c("Series_Name","Series_Code","Country_Code"))
+```
+
+```{r}
+colnames(Country_afertillity)
+```
+
+
+```{r}
+#pivot_longer
+Country_afertillity %>%
+  pivot_longer(cols = !Country_Name, names_to = "Years", values_to = "value")
+```
+more to go
+
