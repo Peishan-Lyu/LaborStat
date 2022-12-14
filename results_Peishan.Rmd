@@ -16,40 +16,7 @@ library(forcats)
 library(tidyverse)
 library(GGally)
 library(cowplot)
-```
-
-```{r}
-Stats_by_Country_1972_1996 <- read_csv("data/Stats_by_Country_1972-1996.csv", na = "NA")
-Stats_by_Country_1997_2021 <- read_csv("data/Stats_by_Country_1997-2021.csv", na = "NA")
-Stats_by_Income_1972_2021 <- read_csv("data/Stats_by_Income_1972-2021.csv", na = "NA")
-Stats_by_Region_1972_2021 <- read_csv("data/Stats_by_Region_1972-2021.csv", na = "NA")
-```
-
-###Region data
-
-```{r}
-# Rename Columns
-setnames((Stats_by_Region_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
-colnames(Stats_by_Region_1972_2021) <- substring(colnames(Stats_by_Region_1972_2021), 1, 4)
-```
-
-###Income data
-```{r}
-# Rename Columns
-setnames((Stats_by_Income_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
-colnames(Stats_by_Income_1972_2021) <- substring(colnames(Stats_by_Income_1972_2021), 1, 4)
-```
-
-###Country data
-```{r}
-common_col_names <- intersect(names(Stats_by_Country_1972_1996), names(Stats_by_Country_1997_2021))
-Stats_by_Country_1972_2021 <- merge(Stats_by_Country_1972_1996, Stats_by_Country_1997_2021, all.x = TRUE)
-```
-
-```{r}
-# Rename Columns
-setnames((Stats_by_Country_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
-colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972_2021), 1, 4)
+library(data.table)
 ```
 
 ## Highlighting the current situation and historical trends. 

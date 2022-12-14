@@ -1,0 +1,108 @@
+---
+title: "results2_Peishan"
+output: html_document
+date: "2022-12-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(tidyverse)
+library(GGally)
+library(cowplot)
+library(data.table)
+```
+
+```{r}
+Stats_by_Country_1972_1996 <- read_csv("data/Stats_by_Country_1972-1996.csv", na = "NA")
+Stats_by_Country_1997_2021 <- read_csv("data/Stats_by_Country_1997-2021.csv", na = "NA")
+Stats_by_Income_1972_2021 <- read_csv("data/Stats_by_Income_1972-2021.csv", na = "NA")
+Stats_by_Region_1972_2021 <- read_csv("data/Stats_by_Region_1972-2021.csv", na = "NA")
+```
+
+###Region data
+
+```{r}
+# Rename Columns
+setnames((Stats_by_Region_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Region_1972_2021) <- substring(colnames(Stats_by_Region_1972_2021), 1, 4)
+```
+
+###Income data
+```{r}
+# Rename Columns
+setnames((Stats_by_Income_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Income_1972_2021) <- substring(colnames(Stats_by_Income_1972_2021), 1, 4)
+```
+
+###Country data
+```{r}
+common_col_names <- intersect(names(Stats_by_Country_1972_1996), names(Stats_by_Country_1997_2021))
+Stats_by_Country_1972_2021 <- merge(Stats_by_Country_1972_1996, Stats_by_Country_1997_2021, all.x = TRUE)
+```
+
+```{r}
+# Rename Columns
+setnames((Stats_by_Country_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972_2021), 1, 4)
+```
+
+##How have the world and regional populations evolved over the past 5 decades?
+
+**Line chart**
+a. Total population in regions categorized by income level: 
+```{r}
+Income_Population <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Population, total") %>%
+  select(-c("SeN","SeC","CoC")) 
+```
+
+```{r}
+#pivot_longer
+Income_population_clean <- Income_Population %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
+
+Income_population_clean$Total_Population <- as.numeric(Income_population_clean$Total_Population)
+Income_population_clean$Years <- as.numeric(Income_population_clean$Years)
+
+Income_population_clean <- Income_population_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Total_Population))
+```
+
+```{r}
+ggplot(Income_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Total Population in regions categorized by income level")
+```
+b. Total population in regions categorized by geographical info: 
+```{r}
+Geo_Population <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Population, total") %>%
+  select(-c("SeN","SeC","CoC")) 
+```
+
+```{r}
+#pivot_longer
+Geo_population_clean <- Geo_Population %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
+
+Geo_population_clean$Total_Population <- as.numeric(Geo_population_clean$Total_Population)
+Geo_population_clean$Years <- as.numeric(Geo_population_clean$Years)
+
+Geo_population_clean <- Geo_population_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Total_Population))
+```
+
+```{r}
+ggplot(Geo_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Total Population in regions categorized by geography")
+```
