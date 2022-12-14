@@ -7,7 +7,7 @@ output:
 
 ## Sources
 
-### Data Sources:
+**Data Sources:**
 
 The World Bank’s database “Health Nutrition and Population Statistics” is a collection of a large number of series (fields).
 Different data fields are supplied by different entities:
@@ -17,25 +17,26 @@ Different data fields are supplied by different entities:
 * Medical data fields are mostly by WHO.
 Despite the diverse nature of the data fields, they all fit into a similar framework: one observation per year per country / region / country group.
 
-### Frequency of updates:
+**Frequency of updates:**
+
 The update is probably on an ad-hoc basis, as difference sources run different schedules.
 (One evidence of update being ad-hoc is: 2021 data is now available for some fields but not for others, and each available field is available for all the countries.)
 As stated in earlier sections, demographics changes slowly, and it usually takes effect over a long horizon. Therefore, the time-sensitiveness of data is not a big issue for our study.
 
-### Data Format:
+**Data Format:**
 
 * The data query filters on “country”, “series” (field), and “year”.
 * The downloaded data (from each query) is in the format of a single big table in spreadsheet. The rows are the Cartesian product of the countries and fields, and the columns are the years.
 * In total there are 266 “country” (country / region / country group), 443 “series” (field), and 50 “year”.
 
-### Options:
+**Options:**
 
 * We decide to query all the 443 data “series” (field), despite that most of them will not be used in the project. This is for reproducibility, because we avoid choosing the fields manually. The total data size is ~40 MB which is reasonable.
 * The “country” filter contains not only countries, but also regions (e.g. North America, Middle East, Euro Area) and income categories (e.g. Upper Middle Income, Least Developed). We choose to make three separate queries and download three separate spreadsheet files, because these three types of classification are not consistent with each other, and cannot be blended.
 * The regions are not mutually exclusive.
 Besides the collection of mutually exclusive and collectively exhaustive regions (which have “Europe & Central Asia”), we also include “Euro Area” and “European Union”, because “Europe & Central Asia” is too coarse, while “Euro Area” and “European Union” represent more specific economic / social conditions.
 
-### Known Issues:
+**Known Issues:**
 
 * Data for some small countries are not complete. We will filter only countries with population > 1 million as of 2022.
 * Data for 2021 are not complete. We will use data up to 2020.
