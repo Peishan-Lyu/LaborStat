@@ -1,51 +1,47 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Data 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-```
-
-```{r}
-library(readr)
-library(dplyr)
-library(data.table)
-```
 
 ## Sources
 
+### Data Sources:
+
+The World Bank’s database “Health Nutrition and Population Statistics” is a collection of a large number of series (fields).
+Different data fields are supplied by different entities:
+* Demographic data fields are mostly collected by United Nations Population Division.
+* Economic data fields are mostly collected by World Bank.
+* Educational data fields are mostly by United Nations Educational, Scientific and Cultural Organization.
+* Medical data fields are mostly by WHO.
+Despite the diverse nature of the data fields, they all fit into a similar framework: one observation per year per country / region / country group.
+
+### Frequency of updates:
+The update is probably on an ad-hoc basis, as difference sources run different schedules.
+(One evidence of update being ad-hoc is: 2021 data is now available for some fields but not for others, and each available field is available for all the countries.)
+As stated in earlier sections, demographics changes slowly, and it usually takes effect over a long horizon. Therefore, the time-sensitiveness of data is not a big issue for our study.
+
+### Data Format:
+
+* The data query filters on “country”, “series” (field), and “year”.
+* The downloaded data (from each query) is in the format of a single big table in spreadsheet. The rows are the Cartesian product of the countries and fields, and the columns are the years.
+* In total there are 266 “country” (country / region / country group), 443 “series” (field), and 50 “year”.
+
+### Options:
+
+* We decide to query all the 443 data “series” (field), despite that most of them will not be used in the project. This is for reproducibility, because we avoid choosing the fields manually. The total data size is ~40 MB which is reasonable.
+* The “country” filter contains not only countries, but also regions (e.g. North America, Middle East, Euro Area) and income categories (e.g. Upper Middle Income, Least Developed). We choose to make three separate queries and download three separate spreadsheet files, because these three types of classification are not consistent with each other, and cannot be blended.
+* The regions are not mutually exclusive.
+Besides the collection of mutually exclusive and collectively exhaustive regions (which have “Europe & Central Asia”), we also include “Euro Area” and “European Union”, because “Europe & Central Asia” is too coarse, while “Euro Area” and “European Union” represent more specific economic / social conditions.
+
+### Known Issues:
+
+* Data for some small countries are not complete. We will filter only countries with population > 1 million as of 2022.
+* Data for 2021 are not complete. We will use data up to 2020.
+
+
 ## Cleaning / transformation
 
-```{r}
-Stats_by_Country_1972_1996 <- read_csv("data/Stats_by_Country_1972-1996.csv", na = "NA")
-Stats_by_Country_1997_2021 <- read_csv("data/Stats_by_Country_1997-2021.csv", na = "NA")
-Stats_by_Income_1972_2021 <- read_csv("data/Stats_by_Income_1972-2021.csv", na = "NA")
-Stats_by_Region_1972_2021 <- read_csv("data/Stats_by_Region_1972-2021.csv", na = "NA")
-```
-
-###Region data
-
-```{r}
-# Rename Columns
-setnames((Stats_by_Region_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
-colnames(Stats_by_Region_1972_2021) <- substring(colnames(Stats_by_Region_1972_2021), 1, 4)
-```
-
-###Income data
-```{r}
-# Rename Columns
-setnames((Stats_by_Income_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
-colnames(Stats_by_Income_1972_2021) <- substring(colnames(Stats_by_Income_1972_2021), 1, 4)
-```
-
-###Country data
-```{r}
-common_col_names <- intersect(names(Stats_by_Country_1972_1996), names(Stats_by_Country_1997_2021))
-Stats_by_Country_1972_2021 <- merge(Stats_by_Country_1972_1996, Stats_by_Country_1997_2021, all.x = TRUE)
-```
-
-```{r}
-# Rename Columns
-setnames((Stats_by_Country_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
-colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972_2021), 1, 4)
-```
 ## Missing value analysis
 

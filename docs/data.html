@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Data | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic</title>
-  <meta name="description" content="Chapter 3 Data | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
+  <title>Chapter 3 Data | World Demographics Study – a Visualization Perspective</title>
+  <meta name="description" content="Chapter 3 Data | World Demographics Study – a Visualization Perspective" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Data | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
+  <meta property="og:title" content="Chapter 3 Data | World Demographics Study – a Visualization Perspective" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Data | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
+  <meta name="twitter:title" content="Chapter 3 Data | World Demographics Study – a Visualization Perspective" />
   
   
   
@@ -23,7 +23,7 @@
 <meta name="author" content="Yuxiao Liu, Peishan Lyu, Fan Wu" />
 
 
-<meta name="date" content="2022-11-01" />
+<meta name="date" content="2022-12-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -80,7 +80,14 @@
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a></li>
+<li class="chapter" data-level="3.1" data-path="data.html"><a href="data.html#sources"><i class="fa fa-check"></i><b>3.1</b> Sources</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="data.html"><a href="data.html#data-sources"><i class="fa fa-check"></i><b>3.1.1</b> Data Sources:</a></li>
+<li class="chapter" data-level="3.1.2" data-path="data.html"><a href="data.html#frequency-of-updates"><i class="fa fa-check"></i><b>3.1.2</b> Frequency of updates:</a></li>
+<li class="chapter" data-level="3.1.3" data-path="data.html"><a href="data.html#data-format"><i class="fa fa-check"></i><b>3.1.3</b> Data Format:</a></li>
+<li class="chapter" data-level="3.1.4" data-path="data.html"><a href="data.html#options"><i class="fa fa-check"></i><b>3.1.4</b> Options:</a></li>
+<li class="chapter" data-level="3.1.5" data-path="data.html"><a href="data.html#known-issues"><i class="fa fa-check"></i><b>3.1.5</b> Known Issues:</a></li>
+</ul></li>
 <li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
@@ -98,7 +105,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">World Demographics Study – a Visualization Perspective</a>
           </h1>
         </div>
 
@@ -110,6 +117,46 @@
 <h1><span class="header-section-number">Chapter 3</span> Data<a href="data.html#data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="data-sources" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Data Sources:<a href="data.html#data-sources" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The World Bank’s database “Health Nutrition and Population Statistics” is a collection of a large number of series (fields).
+Different data fields are supplied by different entities:
+* Demographic data fields are mostly collected by United Nations Population Division.
+* Economic data fields are mostly collected by World Bank.
+* Educational data fields are mostly by United Nations Educational, Scientific and Cultural Organization.
+* Medical data fields are mostly by WHO.
+Despite the diverse nature of the data fields, they all fit into a similar framework: one observation per year per country / region / country group.</p>
+</div>
+<div id="frequency-of-updates" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Frequency of updates:<a href="data.html#frequency-of-updates" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The update is probably on an ad-hoc basis, as difference sources run different schedules.
+(One evidence of update being ad-hoc is: 2021 data is now available for some fields but not for others, and each available field is available for all the countries.)
+As stated in earlier sections, demographics changes slowly, and it usually takes effect over a long horizon. Therefore, the time-sensitiveness of data is not a big issue for our study.</p>
+</div>
+<div id="data-format" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Data Format:<a href="data.html#data-format" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>The data query filters on “country”, “series” (field), and “year”.</li>
+<li>The downloaded data (from each query) is in the format of a single big table in spreadsheet. The rows are the Cartesian product of the countries and fields, and the columns are the years.</li>
+<li>In total there are 266 “country” (country / region / country group), 443 “series” (field), and 50 “year”.</li>
+</ul>
+</div>
+<div id="options" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Options:<a href="data.html#options" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>We decide to query all the 443 data “series” (field), despite that most of them will not be used in the project. This is for reproducibility, because we avoid choosing the fields manually. The total data size is ~40 MB which is reasonable.</li>
+<li>The “country” filter contains not only countries, but also regions (e.g. North America, Middle East, Euro Area) and income categories (e.g. Upper Middle Income, Least Developed). We choose to make three separate queries and download three separate spreadsheet files, because these three types of classification are not consistent with each other, and cannot be blended.</li>
+<li>The regions are not mutually exclusive.
+Besides the collection of mutually exclusive and collectively exhaustive regions (which have “Europe &amp; Central Asia”), we also include “Euro Area” and “European Union”, because “Europe &amp; Central Asia” is too coarse, while “Euro Area” and “European Union” represent more specific economic / social conditions.</li>
+</ul>
+</div>
+<div id="known-issues" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Known Issues:<a href="data.html#known-issues" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Data for some small countries are not complete. We will filter only countries with &gt; 1million population as of 2022.</li>
+<li>Data for 2021 are not complete. We will use data up to 2020.</li>
+</ul>
+</div>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>

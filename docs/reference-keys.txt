@@ -9,3 +9,8 @@ missing-value-analysis
 results
 interactive-component
 conclusion
+data-sources
+frequency-of-updates
+data-format
+options
+known-issues
