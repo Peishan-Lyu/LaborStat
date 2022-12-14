@@ -15,12 +15,48 @@ library(dplyr)
 library(forcats)
 library(tidyverse)
 library(GGally)
+library(cowplot)
 ```
 
+```{r}
+Stats_by_Country_1972_1996 <- read_csv("data/Stats_by_Country_1972-1996.csv", na = "NA")
+Stats_by_Country_1997_2021 <- read_csv("data/Stats_by_Country_1997-2021.csv", na = "NA")
+Stats_by_Income_1972_2021 <- read_csv("data/Stats_by_Income_1972-2021.csv", na = "NA")
+Stats_by_Region_1972_2021 <- read_csv("data/Stats_by_Region_1972-2021.csv", na = "NA")
+```
 
-### Overall trends of population change/ Life expectancy/mortality rate for the whole world in the past 60 years. 
+###Region data
 
-1a. Total population change by income level: 
+```{r}
+# Rename Columns
+setnames((Stats_by_Region_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Region_1972_2021) <- substring(colnames(Stats_by_Region_1972_2021), 1, 4)
+```
+
+###Income data
+```{r}
+# Rename Columns
+setnames((Stats_by_Income_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Income_1972_2021) <- substring(colnames(Stats_by_Income_1972_2021), 1, 4)
+```
+
+###Country data
+```{r}
+common_col_names <- intersect(names(Stats_by_Country_1972_1996), names(Stats_by_Country_1997_2021))
+Stats_by_Country_1972_2021 <- merge(Stats_by_Country_1972_1996, Stats_by_Country_1997_2021, all.x = TRUE)
+```
+
+```{r}
+# Rename Columns
+setnames((Stats_by_Country_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972_2021), 1, 4)
+```
+
+## Highlighting the current situation and historical trends. 
+
+### Overall trends of population change/ Life expectancy/mortality rate for the whole world in the past 50 years. 
+
+1a. Total population change in regions categorized by income level: 
 ```{r}
 Income_Population <- Stats_by_Income_1972_2021 %>%
   filter(SeN == "Population, total") %>%
@@ -31,47 +67,188 @@ Income_Population <- Stats_by_Income_1972_2021 %>%
 #pivot_longer
 Income_population_clean <- Income_Population %>%
   pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
-Income_population_clean <- Income_population_clean %>%
-  mutate(lag = lag(Total_Population)) %>%
-  mutate(pop.change = ((as.numeric(Income_population_clean$Total_Population) - as.numeric(lag)) / as.numeric(lag))) %>%
-  filter(Years != "1972")
+
 Income_population_clean$Total_Population <- as.numeric(Income_population_clean$Total_Population)
 Income_population_clean$Years <- as.numeric(Income_population_clean$Years)
+
+Income_population_clean <- Income_population_clean %>%
+  mutate(lag = lag(Total_Population)) %>%
+  mutate(pop.change = ((Income_population_clean$Total_Population - lag) / lag)) %>%
+  filter(Years != "1972") %>%
+  mutate(CoN = fct_reorder2(CoN, Years, pop.change))
 ```
 
 ```{r}
 ggplot(Income_population_clean, aes(x = Years, y = pop.change, color = CoN))+
   geom_line()+
   geom_point()+
-  ggtitle("Population change by income")
+  ggtitle("Total Population change in regions categorized by income level")
 ```
-1b. Population change by region: 
+1b. Population change in regions categorized by geography: 
 ```{r}
-Region_Population <- Stats_by_Region_1972_2021 %>%
+Geo_Population <- Stats_by_Region_1972_2021 %>%
   filter(SeN == "Population, total") %>%
   select(-c("SeN","SeC","CoC"))
 ```
 
 ```{r}
 #pivot_longer
-Region_population_clean <- Region_Population %>%
+Geo_population_clean <- Geo_Population %>%
   pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
 
-Region_population_clean <- Region_population_clean %>%
+Geo_population_clean$Total_Population <- as.numeric(Geo_population_clean$Total_Population)
+Geo_population_clean$Years <- as.numeric(Geo_population_clean$Years)
+
+Geo_population_clean <- Geo_population_clean %>%
   mutate(lag = lag(Total_Population)) %>%
-  mutate(pop.change = ((as.numeric(Region_population_clean$Total_Population) - as.numeric(lag)) / as.numeric(lag))) %>%
-  filter(Years != "1972")
-Region_population_clean$Total_Population <- as.numeric(Region_population_clean$Total_Population)
-Region_population_clean$Years <- as.numeric(Region_population_clean$Years)
+  mutate(pop.change = ((Geo_population_clean$Total_Population - lag) / lag)) %>%
+  filter(Years != "1972") %>%
+  mutate(CoN = fct_reorder2(CoN, Years, pop.change))
+
 ```
 
 ```{r}
-ggplot(Region_population_clean, aes(x = Years, y = pop.change, color = CoN))+
+ggplot(Geo_population_clean, aes(x = Years, y = pop.change, color = CoN))+
   geom_line()+
   geom_point()+
-  ggtitle("Total population change by region")
+  ggtitle("Total population change in regions categorized by geography")
 ```
-2a. Life expectancy at birth by income level: 
+1c. Population change in regions categorized by income - gender disparity. 
+
+female: 
+```{r}
+Income_fPopulation <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Population, female") %>%
+  select(-c("SeN","SeC","CoC"))
+```
+
+```{r}
+#pivot_longer
+Income_fpopulation_clean <- Income_fPopulation %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Female_Population")
+
+Income_fpopulation_clean$Years <- as.numeric(Income_fpopulation_clean$Years)
+Income_fpopulation_clean$Female_Population <- as.numeric(Income_fpopulation_clean$Female_Population)
+
+Income_fpopulation_clean <- Income_fpopulation_clean %>%
+  mutate(lag = lag(Female_Population)) %>%
+  mutate(fpop.change = ((Income_fpopulation_clean$Female_Population - lag) / lag)) %>%
+  filter(Years != "1972")%>%
+  mutate(CoN = fct_reorder2(CoN, Years, fpop.change))
+
+```
+
+```{r}
+fpop_I <- 
+ggplot(Income_fpopulation_clean, aes(x = Years, y = fpop.change, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Female population change in regions categorized by income")
+```
+
+male: 
+```{r}
+Income_mPopulation <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Population, male") %>%
+  select(-c("SeN","SeC","CoC"))
+```
+
+```{r}
+#pivot_longer
+Income_mpopulation_clean <- Income_mPopulation %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Male_Population")
+
+Income_mpopulation_clean$Years <- as.numeric(Income_mpopulation_clean$Years)
+Income_mpopulation_clean$Male_Population <- as.numeric(Income_mpopulation_clean$Male_Population)
+
+Income_mpopulation_clean <- Income_mpopulation_clean %>%
+  mutate(lag = lag(Male_Population)) %>%
+  mutate(mpop.change = ((Income_mpopulation_clean$Male_Population - lag) / lag)) %>%
+  filter(Years != "1972")%>%
+  mutate(CoN = fct_reorder2(CoN, Years, mpop.change))
+
+```
+
+```{r}
+mpop_I <- 
+ggplot(Income_mpopulation_clean, aes(x = Years, y = mpop.change, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Male population change in regions categorized by income")
+```
+
+```{r}
+plot_grid(fpop_I, mpop_I, align = "v", nrow = 2)
+```
+
+1d. Population change in regions categorized by geography - gender disparity. 
+
+female: 
+```{r}
+Geo_fPopulation <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Population, female") %>%
+  select(-c("SeN","SeC","CoC"))
+```
+
+```{r}
+#pivot_longer
+Geo_fpopulation_clean <- Geo_fPopulation %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Female_Population")
+
+Geo_fpopulation_clean$Years <- as.numeric(Geo_fpopulation_clean$Years)
+Geo_fpopulation_clean$Female_Population <- as.numeric(Geo_fpopulation_clean$Female_Population)
+
+Geo_fpopulation_clean <- Geo_fpopulation_clean %>%
+  mutate(lag = lag(Female_Population)) %>%
+  mutate(fpop.change = ((Geo_fpopulation_clean$Female_Population - lag) / lag)) %>%
+  filter(Years != "1972")%>%
+  mutate(CoN = fct_reorder2(CoN, Years, fpop.change))
+
+```
+
+```{r}
+fpop_G <- 
+ggplot(Geo_fpopulation_clean, aes(x = Years, y = fpop.change, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Female population change in regions categorized by geography")
+```
+
+male: 
+```{r}
+Geo_mPopulation <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Population, male") %>%
+  select(-c("SeN","SeC","CoC"))
+```
+
+```{r}
+#pivot_longer
+Geo_mpopulation_clean <- Geo_mPopulation %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Male_Population")
+
+Geo_mpopulation_clean$Years <- as.numeric(Geo_mpopulation_clean$Years)
+Geo_mpopulation_clean$Male_Population <- as.numeric(Geo_mpopulation_clean$Male_Population)
+
+Geo_mpopulation_clean <- Geo_mpopulation_clean %>%
+  mutate(lag = lag(Male_Population)) %>%
+  mutate(mpop.change = ((Geo_mpopulation_clean$Male_Population - lag) / lag)) %>%
+  filter(Years != "1972")%>%
+  mutate(CoN = fct_reorder2(CoN, Years, mpop.change))
+```
+
+```{r}
+mpop_G <- 
+ggplot(Geo_mpopulation_clean, aes(x = Years, y = mpop.change, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Male population change in regions categorized by geography")
+```
+
+```{r}
+plot_grid(fpop_G, mpop_G, align = "v", nrow = 2)
+```
+
+2a. Life expectancy at birth in regions categorized by income level: 
 ```{r}
 Income_Lexpect <- Stats_by_Income_1972_2021 %>%
   filter(SeN == "Life expectancy at birth, total (years)") %>%
@@ -82,41 +259,101 @@ Income_Lexpect <- Stats_by_Income_1972_2021 %>%
 #pivot_longer
 Income_Lexpect_clean <- Income_Lexpect %>%
   pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
+
 Income_Lexpect_clean$Life_expectancy_at_birth <- as.numeric(Income_Lexpect_clean$Life_expectancy_at_birth)
 Income_Lexpect_clean$Years <- as.numeric(Income_Lexpect_clean$Years)
+
+Income_Lexpect_clean <- Income_Lexpect_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Life_expectancy_at_birth))
 ```
 
 ```{r}
 ggplot(Income_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color = CoN))+
   geom_line()+
   geom_point()+
-  ggtitle("Life expectancy at birth by income level")
+  ggtitle("Life expectancy at birth in regions categorized by income level")
 ```
 for high income and OECD members, life expectancy dropped a little these years, why? 
 
-2b. Life expectancy at birth by region: 
+2b. Life expectancy at birth in regions categorized by geography: 
 ```{r}
-Region_Lexpect <- Stats_by_Region_1972_2021 %>%
+Geo_Lexpect <- Stats_by_Region_1972_2021 %>%
   filter(SeN == "Life expectancy at birth, total (years)") %>%
   select(-c("SeN","SeC","CoC","2021"))
 ```
 
 ```{r}
 #pivot_longer
-Region_Lexpect_clean <- Region_Lexpect %>%
+Geo_Lexpect_clean <- Geo_Lexpect %>%
   pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
-Region_Lexpect_clean$Life_expectancy_at_birth <- as.numeric(Region_Lexpect_clean$Life_expectancy_at_birth)
-Region_Lexpect_clean$Years <- as.numeric(Region_Lexpect_clean$Years)
+
+Geo_Lexpect_clean$Life_expectancy_at_birth <- as.numeric(Geo_Lexpect_clean$Life_expectancy_at_birth)
+Geo_Lexpect_clean$Years <- as.numeric(Geo_Lexpect_clean$Years)
+
+Geo_Lexpect_clean <- Geo_Lexpect_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Life_expectancy_at_birth))
+
 ```
 
 ```{r}
-ggplot(Region_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color = CoN))+
+ggplot(Geo_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color = CoN))+
   geom_line()+
   geom_point()+
-  ggtitle("Life expectancy at birth by region")
+  ggtitle("Life expectancy at birth in regions categorized by geography")
+```
+3a. Crude Birth rate in regions categorized by income level: 
+```{r}
+Income_RBirth <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
 ```
 
-3a. Crude Death rate by income level: 
+```{r}
+#pivot_longer
+Income_RBirth_clean <- Income_RBirth %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Birth_per_1000")
+
+Income_RBirth_clean$Birth_per_1000 <- as.numeric(Income_RBirth_clean$Birth_per_1000)
+Income_RBirth_clean$Years <- as.numeric(Income_RBirth_clean$Years)
+
+Income_RBirth_clean <- Income_RBirth_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Birth_per_1000))
+
+```
+
+```{r}
+ggplot(Income_RBirth_clean, aes(x = Years, y = Birth_per_1000, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Birth rate crude (per 1000 people) in regions categorized by income level")
+```
+
+3b. Crude Birth rate in regions categorized by geography: 
+```{r}
+Geo_RBirth <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+```
+
+```{r}
+#pivot_longer
+Geo_RBirth_clean <- Geo_RBirth %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Birth_per_1000")
+Geo_RBirth_clean$Birth_per_1000 <- as.numeric(Geo_RBirth_clean$Birth_per_1000)
+Geo_RBirth_clean$Years <- as.numeric(Geo_RBirth_clean$Years)
+Geo_RBirth_clean <- Geo_RBirth_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Birth_per_1000))
+```
+
+```{r}
+ggplot(Geo_RBirth_clean, aes(x = Years, y = Birth_per_1000, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Birth rate crude (per 1000 people) in regions categorized by geography")
+```
+
+
+4a. Crude Death rate in regions categorized by income level: 
 ```{r}
 Income_RDeath <- Stats_by_Income_1972_2021 %>%
   filter(SeN == "Death rate, crude (per 1,000 people)") %>%
@@ -126,42 +363,150 @@ Income_RDeath <- Stats_by_Income_1972_2021 %>%
 ```{r}
 #pivot_longer
 Income_RDeath_clean <- Income_RDeath %>%
-  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Death_rate_per_1000")
-Income_RDeath_clean$Death_rate_per_1000 <- as.numeric(Income_RDeath_clean$Death_rate_per_1000)
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Death_per_1000")
+
+Income_RDeath_clean$Death_per_1000 <- as.numeric(Income_RDeath_clean$Death_per_1000)
 Income_RDeath_clean$Years <- as.numeric(Income_RDeath_clean$Years)
+
+Income_RDeath_clean <- Income_RDeath_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Death_per_1000))
 ```
 
 ```{r}
-ggplot(Income_RDeath_clean, aes(x = Years, y = Death_rate_per_1000, color = CoN))+
+ggplot(Income_RDeath_clean, aes(x = Years, y = Death_per_1000, color = CoN))+
   geom_line()+
   geom_point()+
-  ggtitle("Death rate crude (per 1000 people) by income")
+  ggtitle("Death rate crude (per 1000 people) in regions categorized by income level")
 ```
 
-3b. Crude Death rate by region: 
+4b. Crude Death rate in regions categorized by geography: 
 ```{r}
-Region_RDeath <- Stats_by_Region_1972_2021 %>%
+Geo_RDeath <- Stats_by_Region_1972_2021 %>%
   filter(SeN == "Death rate, crude (per 1,000 people)") %>%
   select(-c("SeN","SeC","CoC","2021"))
 ```
 
 ```{r}
 #pivot_longer
-Region_RDeath_clean <- Region_RDeath %>%
-  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Death_rate_per_1000")
-Region_RDeath_clean$Death_rate_per_1000 <- as.numeric(Region_RDeath_clean$Death_rate_per_1000)
-Region_RDeath_clean$Years <- as.numeric(Region_RDeath_clean$Years)
+Geo_RDeath_clean <- Geo_RDeath %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Death_per_1000")
+Geo_RDeath_clean$Death_per_1000 <- as.numeric(Geo_RDeath_clean$Death_per_1000)
+Geo_RDeath_clean$Years <- as.numeric(Geo_RDeath_clean$Years)
+
 ```
 
 ```{r}
-ggplot(Region_RDeath_clean, aes(x = Years, y = Death_rate_per_1000, color = CoN))+
+ggplot(Geo_RDeath_clean, aes(x = Years, y = Death_per_1000, color = CoN))+
   geom_line()+
   geom_point()+
-  ggtitle("Death rate crude (per 1000 people) by region")
+  ggtitle("Death rate crude (per 1000 people) in regions categorized by geography")
 ```
 
+5a. longevity by gender(income)
+female: 
+```{r}
+Income_Rfsurv <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Survival to age 65, female (% of cohort)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+```
 
+```{r}
+#pivot_longer
+Income_Rfsurv_clean <- Income_Rfsurv %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Survival_to_age_65_female")
+Income_Rfsurv_clean$Survival_to_age_65_female <- as.numeric(Income_Rfsurv_clean$Survival_to_age_65_female)
+Income_Rfsurv_clean$Years <- as.numeric(Income_RDeath_clean$Years)
+```
 
+```{r}
+Rfsurv_I <- 
+  ggplot(Income_Rfsurv_clean, aes(x = Years, y = Survival_to_age_65_female, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Percentage of female survived to 65 in regions categorized by income level")
+```
+
+male: 
+```{r}
+Income_Rmsurv <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Survival to age 65, male (% of cohort)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+```
+
+```{r}
+#pivot_longer
+Income_Rmsurv_clean <- Income_Rmsurv %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Survival_to_age_65_male")
+Income_Rmsurv_clean$Survival_to_age_65_male <- as.numeric(Income_Rmsurv_clean$Survival_to_age_65_male)
+Income_Rmsurv_clean$Years <- as.numeric(Income_Rmsurv_clean$Years)
+```
+
+```{r}
+Rmsurv_I <- 
+ggplot(Income_Rmsurv_clean, aes(x = Years, y = Survival_to_age_65_male, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Percentage of male survived to 65 in regions categorized by income level")
+```
+
+```{r}
+#Rmfsurv <- list(Rfsurv, Rmsurv)
+plot_grid(Rfsurv_I, Rmsurv_I, align = "v", nrow = 2)
+```
+
+5b. longevity by gender(region)
+female: 
+```{r}
+Geo_Rfsurv <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Survival to age 65, female (% of cohort)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+```
+
+```{r}
+#pivot_longer
+Geo_Rfsurv_clean <- Geo_Rfsurv %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Survival_to_age_65_female")
+Geo_Rfsurv_clean$Survival_to_age_65_female <- as.numeric(Geo_Rfsurv_clean$Survival_to_age_65_female)
+Geo_Rfsurv_clean$Years <- as.numeric(Geo_RDeath_clean$Years)
+```
+
+```{r}
+Rfsurv_G <- 
+  ggplot(Geo_Rfsurv_clean, aes(x = Years, y = Survival_to_age_65_female, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Percentage of female survived to 65 in regions categorized by geography")
+```
+
+male: 
+```{r}
+Geo_Rmsurv <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Survival to age 65, male (% of cohort)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+```
+
+```{r}
+#pivot_longer
+Geo_Rmsurv_clean <- Geo_Rmsurv %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Survival_to_age_65_male")
+Geo_Rmsurv_clean$Survival_to_age_65_male <- as.numeric(Geo_Rmsurv_clean$Survival_to_age_65_male)
+Geo_Rmsurv_clean$Years <- as.numeric(Geo_Rmsurv_clean$Years)
+```
+
+```{r}
+Rmsurv_G <- 
+ggplot(Geo_Rmsurv_clean, aes(x = Years, y = Survival_to_age_65_male, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Percentage of male survived to 65 in regions categorized by geography")
+```
+
+```{r}
+plot_grid(Rfsurv_G, Rmsurv_G, align = "v", nrow = 2)
+```
+
+## Looking for patterns and relationships among demographic and other factors
+* How do other demographic factors affect birth rate and population?
 
 
 
