@@ -11,6 +11,8 @@ library(tidyr)
 library(data.table)
 library(ggplot2)
 library(forcats)
+library(redav)
+library(stringr)
 ```
 
 
@@ -64,10 +66,10 @@ AgeGroup_Region <- Stats_by_Region_1972_2021 %>%
 
 # Convert and sort
 AgeGroup_Region$Percent <- as.numeric(AgeGroup_Region$Percent)
-young_sorted = AgeGroup_Region[AgeGroup_Region$SeC == 'SP.POP.0014.TO.ZS'
+young_sorted <- AgeGroup_Region[AgeGroup_Region$SeC == 'SP.POP.0014.TO.ZS'
                                & AgeGroup_Region$Year == '2021', c('CoN', 'Percent')] %>%
   arrange(Percent)
-AgeGroup_Region$CoN = factor(AgeGroup_Region$CoN, levels = young_sorted$CoN)
+AgeGroup_Region$CoN <- factor(AgeGroup_Region$CoN, levels = young_sorted$CoN)
 
 ggplot(data = AgeGroup_Region) +
   geom_col(aes(x = Percent, y = CoN,  fill = SeN)) +
@@ -142,7 +144,7 @@ GenderLongevity_Income$Type <- 'by Income Category'
 GenderLongevity_Region$Type <- 'by Region'
 GenderLongevity <- bind_rows(GenderLongevity_Income, GenderLongevity_Region)
 
-GenderLongevityDiff_Country = GenderLongevity_Country %>%
+GenderLongevityDiff_Country <- GenderLongevity_Country %>%
   pivot_wider(id_cols = CoN, names_from = SeC, values_from = Value) %>%
   mutate(Diff = SP.DYN.LE00.FE.IN - SP.DYN.LE00.MA.IN) %>%
   drop_na() %>%
@@ -186,7 +188,7 @@ BirthRate_ChildBearing_Country <- Stats_by_Country_1972_2021 %>%
 # Convert and sort
 BirthRate_ChildBearing_Country$Value <- as.numeric(BirthRate_ChildBearing_Country$Value)
 
-BirthRate_ChildBearing_Country = BirthRate_ChildBearing_Country %>%
+BirthRate_ChildBearing_Country <- BirthRate_ChildBearing_Country %>%
   pivot_wider(id_cols = c(CoN, CoC, Year), names_from = SeC, values_from = Value) %>%
   mutate(Percent1549 = (SP.POP.1519.FE.5Y + SP.POP.2024.FE.5Y + SP.POP.2529.FE.5Y +
                                   SP.POP.3034.FE.5Y + SP.POP.3539.FE.5Y + SP.POP.4044.FE.5Y +
@@ -203,7 +205,7 @@ BirthRate_AgeMarriage_Country <- Stats_by_Country_1972_2021 %>%
 # Convert and sort
 BirthRate_AgeMarriage_Country$Value <- as.numeric(BirthRate_AgeMarriage_Country$Value)
 
-BirthRate_AgeMarriage_Country = BirthRate_AgeMarriage_Country %>%
+BirthRate_AgeMarriage_Country <- BirthRate_AgeMarriage_Country %>%
   pivot_wider(id_cols = c(CoN, CoC, Year), names_from = SeC, values_from = Value) %>%
   drop_na()
 
@@ -228,5 +230,29 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
 ##########  Question 8  ##########
 ##################################
 
+Q8_fields = c('SP.DYN.CBRT.IN', 'NY.GNP.PCAP.CD', 'SL.TLF.TOTL.FE.ZS', 'SH.XPD.GHED.GD.ZS',
+              'SE.XPD.TOTL.GD.ZS', 'SE.TER.ENRR.FE')
+
+BirthRate_OtherFactors_Country <- Stats_by_Country_1972_2021 %>%
+  filter(SeC %in% Q8_fields) %>%
+  select(c('SeC', 'SeN', 'CoN', 'CoC', '2019')) %>%
+  pivot_longer(cols = !c('SeC', 'SeN', 'CoN', 'CoC'), names_to = 'Year', values_to = 'Value')
+# Convert and sort
+BirthRate_OtherFactors_Country$Value <- as.numeric(BirthRate_OtherFactors_Country$Value)
+
+BirthRate_OtherFactors_Country <- BirthRate_OtherFactors_Country %>%
+  mutate(SeN_Short = str_replace(SeC, 'SP.DYN.CBRT.IN', 'Birth Rate')) %>%
+  mutate(SeN_Short = str_replace(SeN_Short, 'NY.GNP.PCAP.CD', 'GNI per capita')) %>%
+  mutate(SeN_Short = str_replace(SeN_Short, 'SL.TLF.TOTL.FE.ZS', 'Labor Force Female %')) %>%
+  mutate(SeN_Short = str_replace(SeN_Short, 'SH.XPD.GHED.GD.ZS', 'Gov Health Exp (% of GDP)')) %>%
+  mutate(SeN_Short = str_replace(SeN_Short, 'SE.XPD.TOTL.GD.ZS', 'Gov Education Exp (% of GDP)')) %>%
+  mutate(SeN_Short = str_replace(SeN_Short, 'SE.TER.ENRR.FE', 'Female College Enrollment %')) %>%
+  group_by(SeC, Year) %>%
+  mutate(Value_Std = (Value - mean(Value, na.rm = TRUE)) / sd(Value, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(id_cols = c(CoC, CoN, Year), names_from = SeN_Short, values_from = Value_Std) %>%
+  drop_na()
+
+draw_biplot(BirthRate_OtherFactors_Country)
 
 ```
