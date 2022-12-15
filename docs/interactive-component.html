@@ -133,8 +133,8 @@
       }
     </style>
       <div>
-      <h3>  Birth Rate, Death Rate and Population Growth Across Different Regions</h3>
-      <p> <i>  Since it's hard to identify the exact number of rates with the static graph (Especially for points like population growth that values for different regions are close to each other), in this interactive part, when you hover over the points, you can see the exact number of the birth rate, the death rate, and the population growth rate. Hope this can help you make better comparisons between different regions.</i></p>
+      <h4>  Birth Rate, Death Rate and Population Growth Across Different Regions</h4>
+      <p> Since it's hard to identify the exact number of rates with the static graph (Especially for points like population growth that values for different regions are close to each other), in this interactive part, when you hover over the points, you can see the exact number of the birth rate, the death rate, and the population growth rate. Hope this can help you make better comparisons between different regions.</p>
     </div>
     
     <div id="plot"></div>
@@ -331,14 +331,6 @@
         svg.append("text").attr("x", innerWidth + 100).attr("y", 200).text("Population").style("font-size", "12px").attr("alignment-baseline","middle")
         svg.append("text").attr("x", innerWidth + 100).attr("y", 215).text("Growth (%)").style("font-size", "12px").attr("alignment-baseline","middle")
              
-        // ADD: create caption
-        d3.select("div#plot")
-          .append("div")
-          .style("padding", "10px")
-          .append("a")
-          .attr("href", "https://databank.worldbank.org/source/health-nutrition-and-population-statistics")
-          .text("Data source:  World Bank’s database “Health Nutrition and Population Statistics”");
-          
           
         </script>
     </body>
