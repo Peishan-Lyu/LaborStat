@@ -23,7 +23,7 @@
 <meta name="author" content="Yuxiao Liu, Peishan Lyu, Fan Wu" />
 
 
-<meta name="date" content="2022-12-14" />
+<meta name="date" content="2022-12-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -77,7 +77,6 @@
 <ul>
 <li class="chapter" data-level="2.1" data-path="proposal.html"><a href="proposal.html#research-topic"><i class="fa fa-check"></i><b>2.1</b> Research topic</a></li>
 <li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a></li>
-<li class="chapter" data-level="2.3" data-path="proposal.html"><a href="proposal.html#plots-plan"><i class="fa fa-check"></i><b>2.3</b> Plots plan</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
@@ -85,7 +84,11 @@
 <li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
+<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#current-situation-and-historical-trends"><i class="fa fa-check"></i><b>4.1</b> Current situation and historical trends</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#pattern-and-relationships"><i class="fa fa-check"></i><b>4.2</b> Pattern and relationships</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -134,83 +137,9 @@
 <p>To answer the questions in the previous section, we need periodic data in various demographic and non-demographic statistics, broken down into regions and countries. The data should cover fields such as:
 * Demographic: population by gender and age group, birth rate, death rate, life expectancy
 * Economic: gdp per capita, income per capita, economic growth
-* Social: education, medical services
-* Policies:</p>
+* Social: education, healthcare, and government policies</p>
 <p>A reliable data source that serves our purposes is the World Bank’s database “Health Nutrition and Population Statistics” (<a href="https://databank.worldbank.org/source/health-nutrition-and-population-statistics" class="uri">https://databank.worldbank.org/source/health-nutrition-and-population-statistics</a>). They maintain comprehensive demographic and non-demographic data covering the aspects mentioned above.</p>
 <p>The data can be downloaded as spreadsheet from the interface, by specifying filters on country, series (field), and year. Data can be imported to RStudio from the spreadsheet.</p>
-</div>
-<div id="plots-plan" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Plots plan<a href="proposal.html#plots-plan" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>Current situation and historical trends</strong></p>
-<p><strong>1 How have the world and regional populations evolved over the past 5 decades?</strong><br />
-Line chart:<br />
-x = Year<br />
-y = Population total (world, by region)</p>
-<p>Mosaic plot:<br />
-Population total by region (% of world) ~ Year, Region</p>
-<p><strong>2 Which regions have the youngest / oldest population?</strong><br />
-Grouped barcharts (2020, by region):<br />
-y = median age (need to calculate)<br />
-x groups = 1980, 1990, 2000, 2010, 2020<br />
-x in each group = regions</p>
-<p>Population pyramid:<br />
-<a href="https://klein.uk/teaching/viz/datavis-pyramids/" class="uri">https://klein.uk/teaching/viz/datavis-pyramids/</a></p>
-<p><strong>3 Which regions have had the highest / lowest birth rate, death rate, and population growth?</strong><br />
-Cleveland dot plot (1980):<br />
-x = Birth rate x 10, Death rate x 10, Population growth (annual %)<br />
-y = region</p>
-<p>Cleveland dot plot (2020):<br />
-Same</p>
-<p><strong>4 How have birth rates changed cross-sectionally by country?</strong><br />
-Scatter plot:<br />
-x = birth rate by country in 1980<br />
-y = birth rate by country in 2020</p>
-<p><strong>5 How has world longevity evolved over the past decades?</strong><br />
-Ridgeline plot (by country):<br />
-x = Life expectancy at birth, total (years)<br />
-y = 1980, 1990, 2000, 2010, 2020</p>
-<p><strong>6 Is there any gender asymmetry in the birth rate and longevity? (Yuxiao)</strong><br />
-Sex ratio at birth (male births per female births)<br />
-GNI per capita</p>
-<p><strong>Pattern and relationships</strong></p>
-<p><strong>7 How do other demographic factors affect birth rate?</strong><br />
-Scatter plots (by country, 2020):<br />
-y = birth rate<br />
-x = Population ages 15-19, female (% of female population) + …<br />
-+ Population ages 45-49, female (% of female population)</p>
-<p>y = birth rate<br />
-x = Age at first marriage, female</p>
-<p><strong>8 How do non-demographic factors (economic, healthcare, and education) affect birth rate?</strong><br />
-PCA (or parallel coordinate plot) (by country, 2020):<br />
-Birth rate<br />
-GNI per capita<br />
-Labor force, female (% of total labor force)<br />
-Domestic general government health expenditure (% of GDP)<br />
-Public spending on education, total (% of GDP)<br />
-Literacy rate, adult total (% of people ages 15 and above)<br />
-School enrollment, tertiary, female (% gross)</p>
-<p><strong>9 How does income category affect longevity?</strong><br />
-Ridgeline plots x 5 (1980, 1990, 2000, 2010, 2020) (income table):<br />
-x = Life expectancy at birth, total (years)<br />
-y = income category [income table]</p>
-<p><strong>10 How does income category affect death rates of difference causes?</strong><br />
-Heat map (or mosaic plot) (income table, 2020):<br />
-vertical cut = income category<br />
-horizontal cut =<br />
-Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)<br />
-Cause of death, by injury (% of total)<br />
-Cause of death, by non-communicable diseases (% of total)</p>
-<p><strong>11 How do labor force and quality affect economic development?</strong><br />
-Parallel coordinate plot (by country):<br />
-2020 divided by 2000:<br />
-GNI per capita growth</p>
-<p>2000:<br />
-Labor force total / Population total<br />
-Urban population (% of total population)<br />
-Human capital index (HCI) (scale 0-1)<br />
-Literacy rate, adult total (% of people ages 15 and above)<br />
-School enrollment, secondary (% gross)<br />
-School enrollment, tertiary (% gross)</p>
 
 </div>
 </div>
