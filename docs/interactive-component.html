@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 Interactive component | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic</title>
-  <meta name="description" content="Chapter 5 Interactive component | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
+  <title>Chapter 5 Interactive component | World Demographics Study – a Visualization Perspective</title>
+  <meta name="description" content="Chapter 5 Interactive component | World Demographics Study – a Visualization Perspective" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 5 Interactive component | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
+  <meta property="og:title" content="Chapter 5 Interactive component | World Demographics Study – a Visualization Perspective" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 Interactive component | Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic" />
+  <meta name="twitter:title" content="Chapter 5 Interactive component | World Demographics Study – a Visualization Perspective" />
   
   
   
@@ -23,7 +23,7 @@
 <meta name="author" content="Yuxiao Liu, Peishan Lyu, Fan Wu" />
 
 
-<meta name="date" content="2022-11-01" />
+<meta name="date" content="2022-12-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -77,6 +77,7 @@
 <ul>
 <li class="chapter" data-level="2.1" data-path="proposal.html"><a href="proposal.html#research-topic"><i class="fa fa-check"></i><b>2.1</b> Research topic</a></li>
 <li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a></li>
+<li class="chapter" data-level="2.3" data-path="proposal.html"><a href="proposal.html#plots-plan"><i class="fa fa-check"></i><b>2.3</b> Plots plan</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
@@ -84,7 +85,11 @@
 <li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
+<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#current-situation-and-historical-trends"><i class="fa fa-check"></i><b>4.1</b> Current situation and historical trends</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#pattern-and-relationships"><i class="fa fa-check"></i><b>4.2</b> Pattern and relationships</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -98,7 +103,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analysis on U.S. Employment and Wage Data Pre- and Post-Pandemic</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">World Demographics Study – a Visualization Perspective</a>
           </h1>
         </div>
 
@@ -108,6 +113,232 @@
             <section class="normal" id="section-">
 <div id="interactive-component" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Interactive component<a href="interactive-component.html#interactive-component" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Interactive</title>
+    <script src="https://d3js.org/d3.v7.js">  </script>
+    <style>
+      * {
+        font-family: Times New Roman;
+      }
+      text {
+        font-size: 12px;
+      }
+      div.tooltip {
+        fill = blue;
+      }
+      circle:hover {
+        fill: #ffb900;
+      }
+    </style>
+      <div>
+      <h3>  Birth Rate,Death Rate and Population Growth Across different Regions</h3>
+      <p> <i>  Since it's hard to identify the exact number of rates with the static graph, in this interactive part, when you hover over on the points, you can see the exact number of the birth rate, the death rate and the population growth rate. Hope this can help you make better comparison between different regions</i></p>
+    </div>
+    
+    <div id="plot"></div>
+    
+  </head>
+  <body>
+    
+    <script type="text/javascript">
+    
+    //Set weight and height
+        var w = 850;
+        var h = 500;
+        var margin = {top: 25, right: 100, bottom: 50, left: 150};
+        var innerHeight = h - margin.top - margin.bottom;
+        var innerWidth = w - margin.left - margin.right;
+    
+      // create SVG element
+        var svg = d3.select("div#plot")
+          .append("svg")
+          .attr("width", w)
+          .attr("height", h)
+    
+        // create background rectangle
+       svg.append("rect")
+          .attr("width", w)
+          .attr("height", h)
+          .attr("fill", "#e1e1e1");
+    
+        // create plot group  
+        svg.append("g")
+          .attr("id", "plot")
+          .attr("transform", `translate (${margin.left}, ${margin.top})`);
+    
+    
+        //Dataset
+        var data = [
+          {"country_name":"Least developed countries",
+          "rbirth": 45.662,
+          "rdeath": 18.008,
+          "gpop": 2.533
+        },
+          {"country_name":"OECD members",
+          "rbirth": 17.489,
+          "rdeath": 9.006,
+          "gpop": 0.938
+        },
+          {"country_name":"Low income",
+          "rbirth": 46.272,
+          "rdeath": 18.096,
+          "gpop": 2.515
+        },
+          {"country_name":"Lower middle income",
+          "rbirth": 37.326,
+          "rdeath": 12.917,
+          "gpop": 2.463
+        },
+          {"country_name":"Middle income",
+          "rbirth": 29.551,
+          "rdeath": 10.101,
+          "gpop": 1.967
+        },
+          {"country_name":"Upper middle income",
+          "rbirth": 22.060,
+          "rdeath": 7.388,
+          "gpop": 1.496
+        },
+          {"country_name":"High income",
+          "rbirth": 15.603,
+          "rdeath": 9.034,
+          "gpop": 0.821
+        }
+        ]
+      
+    
+        // ADD: create scales
+        var xScale = d3.scaleLinear()
+          .domain([0, 50])
+          .range([0, innerWidth-100]);
+
+        var yScale = d3.scaleBand()
+          .domain(["Least developed countries", "OECD members", "Low income", "Lower middle income", "Middle income", "Upper middle income", "High income"])
+          .range([0, innerHeight]);
+      
+        var xAxis = d3.axisBottom().scale(xScale);
+
+        var yAxis = d3.axisLeft().scale(yScale);
+    
+        svg.append("g")
+          .attr("class", "xAxis")
+          .attr("transform", `translate (${margin.left}, ${h - margin.bottom})`).call(xAxis);
+    
+        svg.append("g")
+          .attr("class", "yAxis")
+          .attr("transform", `translate (${margin.left}, ${margin.top})`)
+          .call(yAxis);
+
+
+        // ADD: create plot group 
+        var plot = svg.append("g")
+          .attr("id", "plot")
+          .attr("transform", `translate (${margin.left}, ${yScale.bandwidth()/2 + margin.top})`)
+          .selectAll("circle", "line");
+      
+    
+        // ADD: create grid lines
+        plot.data(data)
+          .enter()
+          .append("line")
+          .attr("x1", d => 0)
+          .attr("y1", d => yScale(d.country_name))
+          .attr("x2", d => innerWidth - 100)
+          .attr("y2", d => yScale(d.country_name))
+          .attr("stroke", "grey")
+          .attr("stroke-width", 0.5);
+    
+        // ADD: create circles
+        plot.data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.rbirth))
+          .attr("cy", d => yScale(d.country_name) )
+          .attr("r", 2.5)
+          .attr("fill", "#b7410e")
+          .on("mouseover", function(event, d) {
+            var xcoord = +d3.select(event.currentTarget).attr("cx") + 2
+            var ycoord = +d3.select(event.currentTarget).attr("cy") - 2
+            svg.select("g#plot")
+              .append("text")
+              .attr("id", "tooltip")
+              .attr("x", xcoord)
+              .attr("y", ycoord)
+              .text(d.rbirth);
+                 })
+          .on("mouseout", function() {
+              d3.select("#tooltip").remove();
+                 }
+                 );
+
+        plot.data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.rdeath))
+          .attr("cy", d => yScale(d.country_name) )
+          .attr("r", 2.5)
+          .attr("fill", "#445597")
+          .on("mouseover", function(event, d) {
+            var xcoord = +d3.select(event.currentTarget).attr("cx") + 2
+            var ycoord = +d3.select(event.currentTarget).attr("cy") - 2
+            svg.select("g#plot")
+              .append("text")
+              .attr("id", "tooltip")
+              .attr("x", xcoord)
+              .attr("y", ycoord)
+              .text(d.rdeath);
+                 })
+          .on("mouseout", function() {
+              d3.select("#tooltip").remove();
+                 }
+                 );
+        
+        plot.data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.gpop))
+          .attr("cy", d => yScale(d.country_name) )
+          .attr("r", 2.5)
+          .attr("fill", "#25b5af")
+          .on("mouseover", function(event, d) {
+            var xcoord = +d3.select(event.currentTarget).attr("cx") + 2
+            var ycoord = +d3.select(event.currentTarget).attr("cy") - 2
+            svg.select("g#plot")
+              .append("text")
+              .attr("id", "tooltip")
+              .attr("x", xcoord)
+              .attr("y", ycoord)
+              .text(d.gpop);
+                 })
+          .on("mouseout", function() {
+              d3.select("#tooltip").remove();
+                 }
+                 );
+        
+        // ADD: Legend
+        svg.append("circle").attr("cx",innerWidth + 90).attr("cy",100).attr("r", 3).style("fill", "#b7410e")
+        svg.append("circle").attr("cx",innerWidth + 90).attr("cy",130).attr("r", 3).style("fill", "#445597")
+        svg.append("circle").attr("cx",innerWidth + 90).attr("cy",160).attr("r", 3).style("fill", "#25b5af")
+        
+        svg.append("text").attr("x", innerWidth + 100).attr("y", 100).text("Birth Rate").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", innerWidth + 100).attr("y", 130).text("Death Rate").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", innerWidth + 100).attr("y", 160).text("Population").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", innerWidth + 100).attr("y", 175).text("Growth").style("font-size", "15px").attr("alignment-baseline","middle")
+             
+        // ADD: create caption
+        d3.select("div#plot")
+          .append("div")
+          .style("padding", "10px")
+          .append("a")
+          .attr("href", "https://databank.worldbank.org/source/health-nutrition-and-population-statistics")
+          .text("Data source:  World Bank’s database “Health Nutrition and Population Statistics”");
+          
+          
+        </script>
+    </body>
+</html>
 
 </div>
             </section>
