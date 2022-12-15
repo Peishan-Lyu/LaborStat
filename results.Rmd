@@ -62,7 +62,7 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 
 ```{r}
 Income_Population <- Stats_by_Income_1972_2021 %>%
-  filter(SeN == "Population, total") %>%
+  filter(SeN == "Population, total", !CoN %in% c("OECD members", "Middle income", "Least developed countries: UN classification")) %>%
   select(-c("SeN","SeC","CoC")) 
 #pivot_longer
 Income_population_clean <- Income_Population %>%
@@ -129,6 +129,7 @@ plot_grid(PPop_Income, PPop_Geo, align = "v", nrow = 2)
 ```
 
 
+<br>
 **Question 2: Which regions have the youngest / oldest population?**
 
 For this question, we’re divided population into three age groups: 0-14, 15-64, 65 and above, representing young, working age, and old respectively.
@@ -169,6 +170,7 @@ ggplot(data = AgeGroup_Region) +
 ```
 
 
+<br>
 **Question 3: Which regions have had the highest / lowest birth rate, death rate, and population growth?**
 
 ```{r}
@@ -239,7 +241,7 @@ bdp_1980_clean %>%
   gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
   ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
-  ggtitle("Birth Rate, Death Rate, Population Growth\n by Country Income Category (1980)") +
+  ggtitle("Birth Rate, Death Rate, Population Growth\n - by Country Income Category (1980)") +
   ylab("") +
   xlab("Value (% of Total Population)")+
   theme_linedraw()+
@@ -250,7 +252,7 @@ bdp_2020_clean %>%
   gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
   ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
-  ggtitle("Birth Rate, Death Rate, Population Growth\n by Country Income Category (2020)") +
+  ggtitle("Birth Rate, Death Rate, Population Growth\n - by Country Income Category (2020)") +
   ylab("") +
   xlab("Value (% of Total Population)")+
   theme_linedraw()+
@@ -261,7 +263,7 @@ bdpg_1980_clean %>%
   gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
   ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
-  ggtitle("Birth Rate, Death Rate, Population Growth\n by Region (1980)") +
+  ggtitle("Birth Rate, Death Rate, Population Growth\n - by Region (1980)") +
   ylab("") +
   xlab("% of Total Population")+
   theme_linedraw()+
@@ -272,7 +274,7 @@ bdpg_2020_clean %>%
   gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
   ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
-  ggtitle("Birth Rate, Death Rate, Population Growth\n by Region (2020)") +
+  ggtitle("Birth Rate, Death Rate, Population Growth\n - by Region (2020)") +
   ylab("") +
   xlab("% of Total Population")+
   theme_linedraw()+
@@ -283,12 +285,74 @@ plot_grid(Geo_1980, Geo_2020, align = "v", nrow = 2)
 ```
 
 
+<br>
 **Question 4: How have birth rates changed cross-sectionally by country?**
 
+```{r}
+br_8020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "2020") %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)")
+pt_8020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "2020") %>%
+  filter(SeN == "Population, total")
+brpt_8020 <- cbind(br_8020, pt_8020)
+brpt_8020 <- brpt_8020[!duplicated(as.list(brpt_8020))]
+setnames(brpt_8020, old = c("1980","2020", "1980.1","2020.1"), new = c("br1980", "br2020","pop1980","pop2020"))
+brpt_8020 <- brpt_8020 %>%
+  filter(suppressWarnings(as.numeric(pop1980)) > 1000000 & suppressWarnings(as.numeric(pop2020)) > 1000000) %>%
+  select(-c("SeN","SeN.1", "pop1980", "pop2020")) 
+brpt_8020$br1980 <- suppressWarnings(as.numeric(brpt_8020$br1980))
+brpt_8020$br2020 <- suppressWarnings(as.numeric(brpt_8020$br2020))
 
+brpt_8020_p <- brpt_8020 %>%
+  ggplot(aes(br1980, br2020, text = paste("country:",CoN)))+
+  geom_point(color = '#619CFF', alpha = 0.7, size = 2) +
+  theme_bw()+
+  ggtitle("Birth Rate 2020 vs. Birth Rate 1980 - by Country") +
+  xlab("Birth Rate 1980 (per 1,000 people)")+
+  ylab("Birth Rate 2020 (per 1,000 people)")
+ggplotly(brpt_8020_p)
+```
+
+
+<br>
+<br>
 **Question 5: How has world longevity evolved over the past decades?**
 
+```{r}
+Lexpect <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "1990","2000", "2010", "2020") %>%
+  filter(SeN == "Life expectancy at birth, total (years)")
+Tpop <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "1990","2000", "2010", "2020") %>%
+  filter(SeN == "Population, total")
+L_T <- cbind(Lexpect, Tpop)
+L_T <- L_T[!duplicated(as.list(L_T))]
+setnames(L_T, old = c("1980.1","1990.1","2000.1","2010.1","2020.1"), new = c("Pop1980","Pop1990","Pop2000","Pop2010","Pop2020"))
+L_T <- L_T %>%
+  filter(suppressWarnings(as.numeric(Pop1980)) > 1000000 & suppressWarnings(as.numeric(Pop1990)) > 1000000 & suppressWarnings(as.numeric(Pop2000)) > 1000000 & suppressWarnings(as.numeric(Pop2010)) > 1000000 & suppressWarnings(as.numeric(Pop2020)) > 1000000) %>%
+  select(-c("SeN","SeN.1", "Pop1980","Pop1990","Pop2000","Pop2010","Pop2020"))
+L_T$"1980" <- suppressWarnings(as.numeric(L_T$"1980"))
+L_T$"1990" <- suppressWarnings(as.numeric(L_T$"1990"))
+L_T$"2000" <- suppressWarnings(as.numeric(L_T$"2000"))
+L_T$"2010" <- suppressWarnings(as.numeric(L_T$"2010"))
+L_T$"2020" <- suppressWarnings(as.numeric(L_T$"2020"))
+L_T <- L_T %>% 
+  drop_na()
 
+L_T_clean <- L_T %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
+L_T_clean$Life_expectancy_at_birth <- as.numeric(L_T_clean$Life_expectancy_at_birth)
+
+ggplot(L_T_clean, aes(x = Life_expectancy_at_birth, y = Years)) +
+  geom_density_ridges(fill = "blue",alpha = .5, scale = 1.2) +
+  ggtitle("World Life Expectancy 1980-2020") +
+  ylab("Years") +
+  xlab("Life Expectancy at Birth")
+```
+
+
+<br>
 **Question 6: Is there any gender asymmetry in the birth rate and longevity?**
 
 Some data are unavailable yet for 2021, thus we use 2020.
@@ -380,9 +444,10 @@ ggplot(data = GenderLongevityDiff_Country) +
 ```
 
 
-**Question 7: How do other demographic factors affect birth rate?**
-
 ## Pattern and relationships
+
+<br>
+**Question 7: How do other demographic factors affect birth rate?**
 
 Female age brackets data is unavailable yet for 2021, thus we use 2020.
 Women’s age at first marriage data is collected at different frequencies for each country. We choose a recent year 2018 which has more observations.
@@ -449,7 +514,7 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
 ```
 
 
-
+<br>
 **Question 8: How do non-demographic factors (economic, healthcare, and education) affect birth rate?**
 
 Birth rate is probably affected by economic, healthcare, and education factor.
@@ -489,14 +554,15 @@ draw_biplot(BirthRate_OtherFactors_Country)
 ```
 
 
+<br>
 **Question 9: How does income category affect longevity?**
 
 
-
+<br>
 **Question 10: How does income category affect death rates of difference causes?**
 
 
-
+<br>
 **Question 11 How do labor force and quality affect economic development?**
 
 
