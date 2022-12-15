@@ -61,6 +61,11 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 
 **Question 2: Which regions have the youngest / oldest population?**
 
+For this question, we’re divided population into three age groups: 0-14, 15-64, 65 and above, representing young, working age, and old respectively.
+
+* The first plot takes snapshots of all the regions together. Since 1980, Sub-Saharan Africa always have the highest percentage of young people and the lowest percentage of old people, probably due to the high birth rate and low longevity. While North America and Europe & Central Asia are on the other extreme, probably because they have low birth rates and high longevity. The ranking barely changed over the decades.
+* The second plot presents each individual region through time. Every region has a gradually aging population. Changes for Sub-Saharan Africa, North America, and Europe & Central Asia have been small, while the rest of the world have experienced more significant changes. A plausible explanation could be: Sub-Saharan Africa has maintained its high birth rate, while North America and Europe & Central Asia had less room for further aging.
+
 ```{r}
 Q2_fields = c('SP.POP.0014.TO.ZS', 'SP.POP.1564.TO.ZS', 'SP.POP.65UP.TO.ZS')
 
@@ -104,6 +109,17 @@ ggplot(data = AgeGroup_Region) +
 
 
 **Question 6: Is there any gender asymmetry in the birth rate and longevity?**
+
+Some data are unavailable yet for 2021, thus we use 2020.
+
+* The first plot shows birth ratio (male/female). The natural birth ratio is around 103-107 boys per 100 girls. Ratios above that range might reflect gender selection towards boys.
+  + Surprisingly, middle income countries are more leaned towards gender selection.
+** Region-wise, South Asia and East Asia & Pacific have the highest tendency of gender selection. These are the regions with highest population density, and having cultural emphasis on farming (prefers more boys).
+  + Country-wise, it is not surprising that China, Vietnam, India, and Pakistan are among the highest, based on the same argument above.
+
+* The second and third plots show life expectancy for female and male.
+  + Not surprisingly, women lives longer than men in every country.
+  + The greater gender gaps appear mostly with East European countries, where men’s life expectancy might be shortened due to the culture of drinking alcohol. The lower gender gaps are associated with the most underdeveloped countries where both men and women live short.
 
 ```{r}
 # Birth by gender data
@@ -188,7 +204,7 @@ ggplot(data = GenderLongevityDiff_Country) +
 
 **Question 7: How do other demographic factors affect birth rate?**
 
-```{r, fig.width = 15, fig.height = 10}
+```{r, fig.width = 18, fig.height = 12}
 Q7_fields = c('SP.DYN.CBRT.IN', 'SP.POP.TOTL.FE.ZS', 'SP.POP.1519.FE.5Y', 'SP.POP.2024.FE.5Y',
               'SP.POP.2529.FE.5Y', 'SP.POP.3034.FE.5Y', 'SP.POP.3539.FE.5Y', 'SP.POP.4044.FE.5Y',
               'SP.POP.4549.FE.5Y')
@@ -223,16 +239,18 @@ BirthRate_AgeMarriage_Country <- BirthRate_AgeMarriage_Country %>%
 
 
 ggplot(data = BirthRate_ChildBearing_Country) +
-  geom_point(aes(x = Percent2034, y = SP.DYN.CBRT.IN), color = '#619CFF', alpha = 0.7, size = 2.5) +
-  geom_text(aes(x = Percent2034, y = SP.DYN.CBRT.IN - 1, label = CoC), size = 2.5) +
+  geom_point(aes(x = Percent2034, y = SP.DYN.CBRT.IN), color = '#619CFF', alpha = 0.7, size = 3) +
+  geom_text(aes(x = Percent2034, y = SP.DYN.CBRT.IN - 1, label = CoC), size = 3) +
   facet_wrap(~ Year) +
-  labs(title = 'Birth Rate per 1,000 people ~ % Women at Ages 20-34', x = 'Women at Ages 20-34 (% of Total Population)', y = 'Birth Rate per 1,000 people')
+  labs(title = 'Birth Rate per 1,000 people ~ % Women at Ages 20-34', x = 'Women at Ages 20-34 (% of Total Population)', y = 'Birth Rate per 1,000 people') +
+  theme(text = element_text(size=20))
 
 ggplot(data = BirthRate_AgeMarriage_Country) +
-  geom_point(aes(x = SP.DYN.SMAM.FE, y = SP.DYN.CBRT.IN), color = '#619CFF', alpha = 0.7, size = 2.5) +
-  geom_text(aes(x = SP.DYN.SMAM.FE, y = SP.DYN.CBRT.IN - 1, label = CoC), size = 2.5) +
+  geom_point(aes(x = SP.DYN.SMAM.FE, y = SP.DYN.CBRT.IN), color = '#619CFF', alpha = 0.7, size = 3) +
+  geom_text(aes(x = SP.DYN.SMAM.FE, y = SP.DYN.CBRT.IN - 1, label = CoC), size = 3) +
   facet_wrap(~ Year) +
-  labs(title = "Birth Rate per 1,000 people ~ Women's Age at First Marriage", x = "Women's Age at First Marriage', y = 'Birth Rate per 1,000 people")
+  labs(title = "Birth Rate per 1,000 people ~ Women's Age at First Marriage", x = "Women's Age at First Marriage', y = 'Birth Rate per 1,000 people") +
+  theme(text = element_text(size=20))
 
 ```
 
