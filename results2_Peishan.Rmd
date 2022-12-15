@@ -17,6 +17,8 @@ library(tidyverse)
 library(GGally)
 library(cowplot)
 library(data.table)
+library(plotly)
+library(ggridges)
 ```
 
 ```{r}
@@ -53,7 +55,9 @@ setnames((Stats_by_Country_1972_2021), old = c("Series Name","Series Code", "Cou
 colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972_2021), 1, 4)
 ```
 
-##How have the world and regional populations evolved over the past 5 decades?
+##################################
+##########  Question 1  ##########
+##################################
 
 **Line chart**
 a. Total population in regions categorized by income level: 
@@ -109,7 +113,9 @@ ggplot(Geo_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
 
 **Mosaic chart**
 
-##Which regions have had the highest / lowest birth rate, death rate, and population growth?
+##################################
+##########  Question 3  ##########
+##################################
 
 Cleveland dot plot (1980):  
 x = Birth rate x 10, Death rate x 10, Population growth (annual %)  
@@ -134,18 +140,17 @@ bdp_1980_clean <- bdp_1980_clean[!duplicated(as.list(bdp_1980_clean))]
 setnames(bdp_1980_clean, old = c("1980","1980.1", "1980.2"), new = c("rbirth", "rdeath", "gpop"))
 bdp_1980_clean$rbirth <- as.numeric(bdp_1980_clean$rbirth)/10
 bdp_1980_clean$rdeath <- as.numeric(bdp_1980_clean$rdeath)/10
+bdp_1980_clean$gpop <- as.numeric(bdp_1980_clean$gpop)/1
 ```
 
 ```{r}
 bdp_1980_clean %>%
-  gather(key='income_level',value='value',rbirth, rdeath, gpop) %>%
-  ggplot(aes(x=value, y=fct_reorder2(CoN, income_level == "gpop",value,.desc=FALSE), color = income_level)) +
+  gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
   ggtitle("1980's Birth rate & Death rate & Population Growth in regions categorized by income") +
   ylab("") +
-  theme_linedraw()+
-  coord_flip()+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  theme_linedraw()
 ```
 For regions categorized by geography in 1980: 
 ```{r}
@@ -164,18 +169,17 @@ bdpg_1980_clean <- bdpg_1980_clean[!duplicated(as.list(bdpg_1980_clean))]
 setnames(bdpg_1980_clean, old = c("1980","1980.1", "1980.2"), new = c("rbirth", "rdeath", "gpop"))
 bdpg_1980_clean$rbirth <- as.numeric(bdpg_1980_clean$rbirth)/10
 bdpg_1980_clean$rdeath <- as.numeric(bdpg_1980_clean$rdeath)/10
+bdpg_1980_clean$gpop <- as.numeric(bdpg_1980_clean$gpop)/1
 ```
 
 ```{r}
-bdp_1980_clean %>%
-  gather(key='geography',value='value',rbirth, rdeath, gpop) %>%
-  ggplot(aes(x=value, y=fct_reorder2(CoN, geography == "gpop",value,.desc=FALSE), color = geography)) +
+bdpg_1980_clean %>%
+  gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
-  ggtitle("1980's Birth rate & Death rate & Population Growth in regions categorized by income") +
+  ggtitle("1980's Birth rate & Death rate & Population Growth in regions categorized by geography") +
   ylab("") +
-  theme_linedraw()+
-  coord_flip()+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  theme_linedraw()
 ```
 For regions categorized by income level in 2020: 
 ```{r}
@@ -191,18 +195,17 @@ bdp_2020_clean <- bdp_2020_clean[!duplicated(as.list(bdp_2020_clean))]
 setnames(bdp_2020_clean, old = c("2020","2020.1", "2020.2"), new = c("rbirth", "rdeath", "gpop"))
 bdp_2020_clean$rbirth <- as.numeric(bdp_2020_clean$rbirth)/10
 bdp_2020_clean$rdeath <- as.numeric(bdp_2020_clean$rdeath)/10
+bdp_2020_clean$gpop <- as.numeric(bdp_2020_clean$gpop)/1
 ```
 
 ```{r}
 bdp_2020_clean %>%
-  gather(key='income_level',value='value',rbirth, rdeath, gpop) %>%
-  ggplot(aes(x=value, y=fct_reorder2(CoN, income_level == "gpop",value,.desc=FALSE), color = income_level)) +
+  gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
   ggtitle("2020's Birth rate & Death rate & Population Growth in regions categorized by income") +
   ylab("") +
-  theme_linedraw()+
-  coord_flip()+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  theme_linedraw()
 ```
 For regions categorized by geography in 2020: 
 ```{r}
@@ -221,36 +224,105 @@ bdpg_2020_clean <- bdpg_2020_clean[!duplicated(as.list(bdpg_2020_clean))]
 setnames(bdpg_2020_clean, old = c("2020","2020.1", "2020.2"), new = c("rbirth", "rdeath", "gpop"))
 bdpg_2020_clean$rbirth <- as.numeric(bdpg_2020_clean$rbirth)/10
 bdpg_2020_clean$rdeath <- as.numeric(bdpg_2020_clean$rdeath)/10
+bdpg_2020_clean$gpop <- as.numeric(bdpg_2020_clean$gpop)/1
 ```
 
 ```{r}
-bdp_2020_clean %>%
-  gather(key='geography',value='value',rbirth, rdeath, gpop) %>%
-  ggplot(aes(x=value, y=fct_reorder2(CoN, geography == "gpop",value,.desc=FALSE), color = geography)) +
+bdpg_2020_clean %>%
+  gather(key='measures',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, measures == "gpop",value,.desc=FALSE), color = measures)) +
   geom_point() +
-  ggtitle("2020's Birth rate & Death rate & Population Growth in regions categorized by income") +
+  ggtitle("2020's Birth rate & Death rate & Population Growth in regions categorized by geography") +
   ylab("") +
-  theme_linedraw()+
-  coord_flip()+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  theme_linedraw()
 ```
+##################################
+##########  Question 4  ##########
+##################################
 
-## How have birth rates changed cross-sectionally by country?
 Scatter plot:  
 x = birth rate by country in 1980  
 y = birth rate by country in 2020
 
-## How has world longevity evolved over the past decades? 
+```{r}
+br_8020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "2020") %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)")
+pt_8020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "2020") %>%
+  filter(SeN == "Population, total")
+brpt_8020 <- cbind(br_8020, pt_8020)
+brpt_8020 <- brpt_8020[!duplicated(as.list(brpt_8020))]
+setnames(brpt_8020, old = c("1980","2020", "1980.1","2020.1"), new = c("br1980", "br2020","pop1980","pop2020"))
+brpt_8020 <- brpt_8020 %>%
+  filter(as.numeric(pop1980) > 1000000 & as.numeric(pop2020) > 1000000) %>%
+  select(-c("SeN","SeN.1", "pop1980", "pop2020"))
+brpt_8020$br1980 <- as.numeric(brpt_8020$br1980)
+brpt_8020$br2020 <- as.numeric(brpt_8020$br2020)
+```
+
+```{r}
+brpt_8020_p <- brpt_8020 %>%
+  ggplot(aes(br1980, br2020, color = CoN))+
+  geom_point()+
+  theme_bw()
+ggplotly(brpt_8020_p)
+```
+
+##################################
+##########  Question 5  ##########
+##################################
+
 Ridgeline plot (by country):  
 x = Life expectancy at birth, total (years)  
 y = 1980, 1990, 2000, 2010, 2020
 
-#How does income category affect longevity? 
+```{r}
+Lexpect <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "1990","2000", "2010", "2020") %>%
+  filter(SeN == "Life expectancy at birth, total (years)")
+Tpop <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "1990","2000", "2010", "2020") %>%
+  filter(SeN == "Population, total")
+L_T <- cbind(Lexpect, Tpop)
+L_T <- L_T[!duplicated(as.list(L_T))]
+setnames(L_T, old = c("1980.1","1990.1","2000.1","2010.1","2020.1"), new = c("Pop1980","Pop1990","Pop2000","Pop2010","Pop2020"))
+L_T <- L_T %>%
+  filter(as.numeric(Pop1980) > 1000000 & as.numeric(Pop1990) > 1000000 & as.numeric(Pop2000) > 1000000 & as.numeric(Pop2010) > 1000000 & as.numeric(Pop2020) > 1000000) %>%
+  select(-c("SeN","SeN.1", "Pop1980","Pop1990","Pop2000","Pop2010","Pop2020"))
+L_T$"1980" <- as.numeric(L_T$"1980")
+L_T$"1990" <- as.numeric(L_T$"1990")
+L_T$"2000" <- as.numeric(L_T$"2000")
+L_T$"2010" <- as.numeric(L_T$"2010")
+L_T$"2020" <- as.numeric(L_T$"2020")
+```
+
+```{r}
+L_T_clean <- L_T %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
+L_T_clean$Life_expectancy_at_birth <- as.numeric(L_T_clean$Life_expectancy_at_birth)
+```
+
+```{r}
+ggplot(L_T_clean, aes(x = Life_expectancy_at_birth, y = Years)) +
+  geom_density_ridges(fill = "blue",alpha = .5, scale = 1.2) +
+  ggtitle("World longevity over the past decades") +
+  ylab("Years")
+```
+
+
+##################################
+##########  Question 9  ##########
+##################################
+
 Ridgeline plots x 5 (1980, 1990, 2000, 2010, 2020) (income table):  
 x = Life expectancy at birth, total (years)  
 y = income category [income table]
 
-#How does income category affect death rates of difference causes? 
+##################################
+##########  Question 10 ##########
+##################################
+
 Heat map (or mosaic plot) (income table, 2020):  
 vertical cut = income category  
 horizontal cut =  
@@ -258,7 +330,10 @@ Cause of death, by communicable diseases and maternal, prenatal and nutrition co
 Cause of death, by injury (% of total)  
 Cause of death, by non-communicable diseases (% of total)
 
-#How do labor force and quality affect economic development? 
+##################################
+##########  Question 11 ##########
+##################################
+
 Parallel coordinate plot (by country):  
 2020 divided by 2000:  
 GNI per capita growth 
