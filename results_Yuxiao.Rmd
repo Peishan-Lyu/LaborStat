@@ -7,7 +7,10 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```{r}
 library(readr)
 library(dplyr)
+library(tidyr)
 library(data.table)
+library(ggplot2)
+library(forcats)
 ```
 
 
@@ -46,3 +49,56 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 ```
 
 
+##################################
+##########  Question 2  ##########
+##################################
+```{r}
+# (repr.plot.width = 10, repr.plot.height = 10)
+
+population_pct_fields = c('SP.POP.0014.TO.ZS', 'SP.POP.1564.TO.ZS', 'SP.POP.65UP.TO.ZS')
+
+Region_AgeGroup <- Stats_by_Region_1972_2021 %>%
+  filter(SeC %in% population_pct_fields, ! CoC %in% c('EUU', 'EMU')) %>%
+  select(c('SeC', 'SeN', 'CoN', '1980', '1990', '2000', '2010', '2020')) %>%
+  pivot_longer(cols = !c('SeC', 'SeN', 'CoN'), names_to = 'Year', values_to = 'Percent')
+
+# Convert and sort
+Region_AgeGroup$Percent <- as.numeric(Region_AgeGroup$Percent)
+young_sorted = Region_AgeGroup[Region_AgeGroup$SeC == 'SP.POP.0014.TO.ZS'
+                               & Region_AgeGroup$Year == '2020', c('CoN', 'Percent')] %>%
+  arrange(Percent)
+Region_AgeGroup$CoN = factor(Region_AgeGroup$CoN, levels = young_sorted$CoN)
+
+ggplot(data = Region_AgeGroup) +
+  geom_col(aes(x = Percent, y = CoN,  fill = SeN)) +
+  facet_wrap(~Year) +
+  labs(title = 'Population Age Groups by Region', x = '% of Total Population', y = 'Region') +
+  scale_fill_manual(labels = c('0-14', '15-64', '65 and above'), values = c('#619CFF', '#00BA38', '#F8766D')) +
+  scale_x_reverse() +
+  guides(fill = guide_legend('Age Group'))
+
+ggplot(data = Region_AgeGroup) +
+  geom_col(aes(x = Percent, y = fct_rev(Year),  fill = SeN)) +
+  facet_wrap(~CoN) +
+  labs(title = 'Population Age Groups by Region', x = '% of Total Population', y = 'Year') +
+  scale_fill_manual(labels = c('0-14', '15-64', '65 and above'), values = c('#619CFF', '#00BA38', '#F8766D')) +
+  scale_x_reverse() +
+  guides(fill = guide_legend('Age Group'))
+
+```
+
+##################################
+##########  Question 6  ##########
+##################################
+
+
+
+##################################
+##########  Question 7  ##########
+##################################
+
+
+
+##################################
+##########  Question 8  ##########
+##################################
