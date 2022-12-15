@@ -77,7 +77,6 @@
 <ul>
 <li class="chapter" data-level="2.1" data-path="proposal.html"><a href="proposal.html#research-topic"><i class="fa fa-check"></i><b>2.1</b> Research topic</a></li>
 <li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a></li>
-<li class="chapter" data-level="2.3" data-path="proposal.html"><a href="proposal.html#plots-plan"><i class="fa fa-check"></i><b>2.3</b> Plots plan</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
@@ -129,25 +128,48 @@
 <p><strong>Question 6: Is there any gender asymmetry in the birth rate and longevity?</strong></p>
 <p>Some data are unavailable yet for 2021, thus we use 2020.</p>
 <ul>
-<li><p>The first plot shows birth ratio (male/female). The natural birth ratio is around 103-107 boys per 100 girls. Ratios above that range might reflect gender selection towards boys.</p>
+<li>The first plot shows birth ratio (male/female). The natural birth ratio is around 103-107 boys per 100 girls. Ratios above that range might reflect gender selection towards boys.
 <ul>
 <li>Surprisingly, middle income countries are more leaned towards gender selection.
 ** Region-wise, South Asia and East Asia &amp; Pacific have the highest tendency of gender selection. These are the regions with highest population density, and having cultural emphasis on farming (prefers more boys).</li>
 <li>Country-wise, it is not surprising that China, Vietnam, India, and Pakistan are among the highest, based on the same argument above.</li>
 </ul></li>
-<li><p>The second and third plots show life expectancy for female and male.</p>
+<li>The second and third plots show life expectancy for female and male.
 <ul>
 <li>Not surprisingly, women lives longer than men in every country.</li>
 <li>The greater gender gaps appear mostly with East European countries, where men’s life expectancy might be shortened due to the culture of drinking alcohol. The lower gender gaps are associated with the most underdeveloped countries where both men and women live short.</li>
 </ul></li>
 </ul>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<p><strong>Question 7: How do other demographic factors affect birth rate?</strong></p>
 </div>
 <div id="pattern-and-relationships" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Pattern and relationships<a href="results.html#pattern-and-relationships" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>Question 7: How do other demographic factors affect birth rate?</strong></p>
+<p>Female age brackets data is unavailable yet for 2021, thus we use 2020.
+Women’s age at first marriage data is collected at different frequencies for each country. We choose a recent year 2018 which has more observations.</p>
+<p>Birth rate is probably affected by other demographic factors such % women at young adulthood (of total population) (call it “% young women”) and women’s average age at first marriage.</p>
+<ul>
+<li>Observations from the first plot:
+<ul>
+<li>In 1980, there did not appear to be a positive correlation between birth rate and % young women. There was a cluster of countries with lower % women, yet high birth rate. These are primarily African or Middle Eastern countries.</li>
+<li>Compare 2020 to 1980, The overall birth rate range significantly decreased.</li>
+<li>In 2020, birth rate and % young women show negative correlation, especially in the lower birth rate range. Many developed countries are low (both in absolute terms and in comparison with 1980) in both measures (e.g. Japan, Italy, Spain), consistent with common impression. Low values in both factors have probably had mutual influence over time.</li>
+</ul></li>
+<li>Observations from the second plot:
+<ul>
+<li>There appear to be a strongly negative correlation between birth rate and women’s average age at first marriage.</li>
+</ul></li>
+</ul>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="1728" /><img src="finalproj_files/figure-html/unnamed-chunk-11-2.png" width="1728" /></p>
 <p><strong>Question 8: How do non-demographic factors (economic, healthcare, and education) affect birth rate?</strong></p>
+<p>Birth rate is probably affected by economic, healthcare, and education factor.
+Here we examine these factors: female work force (% of total work force), GNI (Gross National Income) per capita, government health expenditure (% of GDP), government education expenditure (% of GDP), female college enrollment rate (%).<br />
+All factors are standardized for the PCA biplot.</p>
+<ul>
+<li>It’s intuitive that GNI per capita and female college enrollment rate appear strongly negatively correlated with birth rate.</li>
+<li>Government health and education expenditures appear uncorrelated with birth rate.</li>
+<li>Surprisingly, Female work force percentage appears strongly positively correlated with birth rate. Looking further into the specific countries, we see that countries high in both measures are mostly underdeveloped countries. Woman counted as work force in these countries might be mostly doing flexible work which does not conflict with their childcare a lot.</li>
+</ul>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p><strong>Question 9: How does income category affect longevity?</strong></p>
 <p><strong>Question 10: How does income category affect death rates of difference causes?</strong></p>

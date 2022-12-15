@@ -199,10 +199,23 @@ ggplot(data = GenderLongevityDiff_Country) +
 ```
 
 
+**Question 7: How do other demographic factors affect birth rate?**
 
 ## Pattern and relationships
 
-**Question 7: How do other demographic factors affect birth rate?**
+Female age brackets data is unavailable yet for 2021, thus we use 2020.
+Women’s age at first marriage data is collected at different frequencies for each country. We choose a recent year 2018 which has more observations.
+
+Birth rate is probably affected by other demographic factors such % women at young adulthood (of total population) (call it “% young women”) and women’s average age at first marriage.
+
+* Observations from the first plot:
+  + In 1980, there did not appear to be a positive correlation between birth rate and % young women. There was a cluster of countries with lower % women, yet high birth rate. These are primarily African or Middle Eastern countries.
+  + Compare 2020 to 1980, The overall birth rate range significantly decreased.
+  + In 2020, birth rate and % young women show negative correlation, especially in the lower birth rate range. Many developed countries are low (both in absolute terms and in comparison with 1980) in both measures (e.g. Japan, Italy, Spain), consistent with common impression. Low values in both factors have probably had mutual influence over time.
+
+* Observations from the second plot:
+  + There appear to be a strongly negative correlation between birth rate and women’s average age at first marriage.
+
 
 ```{r, fig.width = 18, fig.height = 12}
 Q7_fields = c('SP.DYN.CBRT.IN', 'SP.POP.TOTL.FE.ZS', 'SP.POP.1519.FE.5Y', 'SP.POP.2024.FE.5Y',
@@ -257,6 +270,14 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
 
 
 **Question 8: How do non-demographic factors (economic, healthcare, and education) affect birth rate?**
+
+Birth rate is probably affected by economic, healthcare, and education factor.
+Here we examine these factors: female work force (% of total work force), GNI (Gross National Income) per capita, government health expenditure (% of GDP), government education expenditure (% of GDP), female college enrollment rate (%). All factors are standardized for the PCA biplot.
+
+* It’s intuitive that GNI per capita and female college enrollment rate appear strongly negatively correlated with birth rate.
+* Government health and education expenditures appear uncorrelated with birth rate.
+* Surprisingly, Female work force percentage appears strongly positively correlated with birth rate. Looking further into the specific countries, we see that countries high in both measures are mostly underdeveloped countries. Woman counted as work force in these countries might be mostly doing flexible work which does not conflict with their childcare a lot.
+
 
 ```{r}
 Q8_fields = c('SP.DYN.CBRT.IN', 'NY.GNP.PCAP.CD', 'SL.TLF.TOTL.FE.ZS', 'SH.XPD.GHED.GD.ZS',
