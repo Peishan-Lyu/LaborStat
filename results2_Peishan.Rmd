@@ -1,0 +1,264 @@
+---
+title: "results2_Peishan"
+output: html_document
+date: "2022-12-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(tidyverse)
+library(GGally)
+library(cowplot)
+library(data.table)
+```
+
+```{r}
+Stats_by_Country_1972_1996 <- read_csv("data/Stats_by_Country_1972-1996.csv", na = "NA")
+Stats_by_Country_1997_2021 <- read_csv("data/Stats_by_Country_1997-2021.csv", na = "NA")
+Stats_by_Income_1972_2021 <- read_csv("data/Stats_by_Income_1972-2021.csv", na = "NA")
+Stats_by_Region_1972_2021 <- read_csv("data/Stats_by_Region_1972-2021.csv", na = "NA")
+```
+
+###Region data
+
+```{r}
+# Rename Columns
+setnames((Stats_by_Region_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Region_1972_2021) <- substring(colnames(Stats_by_Region_1972_2021), 1, 4)
+```
+
+###Income data
+```{r}
+# Rename Columns
+setnames((Stats_by_Income_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Income_1972_2021) <- substring(colnames(Stats_by_Income_1972_2021), 1, 4)
+```
+
+###Country data
+```{r}
+common_col_names <- intersect(names(Stats_by_Country_1972_1996), names(Stats_by_Country_1997_2021))
+Stats_by_Country_1972_2021 <- merge(Stats_by_Country_1972_1996, Stats_by_Country_1997_2021, all.x = TRUE)
+```
+
+```{r}
+# Rename Columns
+setnames((Stats_by_Country_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972_2021), 1, 4)
+```
+
+##How have the world and regional populations evolved over the past 5 decades?
+
+**Line chart**
+a. Total population in regions categorized by income level: 
+```{r}
+Income_Population <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Population, total") %>%
+  select(-c("SeN","SeC","CoC")) 
+```
+
+```{r}
+#pivot_longer
+Income_population_clean <- Income_Population %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
+
+Income_population_clean$Total_Population <- as.numeric(Income_population_clean$Total_Population)
+Income_population_clean$Years <- as.numeric(Income_population_clean$Years)
+
+Income_population_clean <- Income_population_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Total_Population))
+```
+
+```{r}
+ggplot(Income_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Total Population in regions categorized by income level")
+```
+b. Total population in regions categorized by geographical info: 
+```{r}
+Geo_Population <- Stats_by_Region_1972_2021 %>%
+  filter(SeN == "Population, total") %>%
+  select(-c("SeN","SeC","CoC")) 
+```
+
+```{r}
+#pivot_longer
+Geo_population_clean <- Geo_Population %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
+
+Geo_population_clean$Total_Population <- as.numeric(Geo_population_clean$Total_Population)
+Geo_population_clean$Years <- as.numeric(Geo_population_clean$Years)
+
+Geo_population_clean <- Geo_population_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Total_Population))
+```
+
+```{r}
+ggplot(Geo_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Total Population in regions categorized by geography")
+```
+
+**Mosaic chart**
+
+##Which regions have had the highest / lowest birth rate, death rate, and population growth?
+
+Cleveland dot plot (1980):  
+x = Birth rate x 10, Death rate x 10, Population growth (annual %)  
+y = region
+  
+Cleveland dot plot (2020):  
+Same
+
+**Cleveland dot plot**
+
+For regions categorized by income level in 1980: 
+```{r}
+bdp_1980 <- Stats_by_Income_1972_2021 %>%
+  select ("SeN", "CoN", "1980") %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)" | SeN == "Death rate, crude (per 1,000 people)" | SeN == "Population growth (annual %)") %>%
+  select(-"SeN")
+bdp_1980_b <- bdp_1980[1:7,]
+bdp_1980_d <- bdp_1980[8:14,]
+bdp_1980_g <- bdp_1980[15:21,]
+bdp_1980_clean <- cbind(bdp_1980_b, bdp_1980_d, bdp_1980_g)
+bdp_1980_clean <- bdp_1980_clean[!duplicated(as.list(bdp_1980_clean))]
+setnames(bdp_1980_clean, old = c("1980","1980.1", "1980.2"), new = c("rbirth", "rdeath", "gpop"))
+bdp_1980_clean$rbirth <- as.numeric(bdp_1980_clean$rbirth)/10
+bdp_1980_clean$rdeath <- as.numeric(bdp_1980_clean$rdeath)/10
+```
+
+```{r}
+bdp_1980_clean %>%
+  gather(key='income_level',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, income_level == "gpop",value,.desc=FALSE), color = income_level)) +
+  geom_point() +
+  ggtitle("1980's Birth rate & Death rate & Population Growth in regions categorized by income") +
+  ylab("") +
+  theme_linedraw()+
+  coord_flip()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+For regions categorized by geography in 1980: 
+```{r}
+bdpg_1980 <- Stats_by_Region_1972_2021 %>%
+  select ("SeN", "CoN", "1980") %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)" | SeN == "Death rate, crude (per 1,000 people)" | SeN == "Population growth (annual %)") %>%
+  select(-"SeN")
+```
+
+```{r}
+bdpg_1980_b <- bdpg_1980[1:9,]
+bdpg_1980_d <- bdpg_1980[10:18,]
+bdpg_1980_g <- bdpg_1980[19:27,]
+bdpg_1980_clean <- cbind(bdpg_1980_b, bdpg_1980_d, bdpg_1980_g)
+bdpg_1980_clean <- bdpg_1980_clean[!duplicated(as.list(bdpg_1980_clean))]
+setnames(bdpg_1980_clean, old = c("1980","1980.1", "1980.2"), new = c("rbirth", "rdeath", "gpop"))
+bdpg_1980_clean$rbirth <- as.numeric(bdpg_1980_clean$rbirth)/10
+bdpg_1980_clean$rdeath <- as.numeric(bdpg_1980_clean$rdeath)/10
+```
+
+```{r}
+bdp_1980_clean %>%
+  gather(key='geography',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, geography == "gpop",value,.desc=FALSE), color = geography)) +
+  geom_point() +
+  ggtitle("1980's Birth rate & Death rate & Population Growth in regions categorized by income") +
+  ylab("") +
+  theme_linedraw()+
+  coord_flip()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+For regions categorized by income level in 2020: 
+```{r}
+bdp_2020 <- Stats_by_Income_1972_2021 %>%
+  select ("SeN", "CoN", "2020") %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)" | SeN == "Death rate, crude (per 1,000 people)" | SeN == "Population growth (annual %)") %>%
+  select(-"SeN")
+bdp_2020_b <- bdp_2020[1:7,]
+bdp_2020_d <- bdp_2020[8:14,]
+bdp_2020_g <- bdp_2020[15:21,]
+bdp_2020_clean <- cbind(bdp_2020_b, bdp_2020_d, bdp_2020_g)
+bdp_2020_clean <- bdp_2020_clean[!duplicated(as.list(bdp_2020_clean))]
+setnames(bdp_2020_clean, old = c("2020","2020.1", "2020.2"), new = c("rbirth", "rdeath", "gpop"))
+bdp_2020_clean$rbirth <- as.numeric(bdp_2020_clean$rbirth)/10
+bdp_2020_clean$rdeath <- as.numeric(bdp_2020_clean$rdeath)/10
+```
+
+```{r}
+bdp_2020_clean %>%
+  gather(key='income_level',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, income_level == "gpop",value,.desc=FALSE), color = income_level)) +
+  geom_point() +
+  ggtitle("2020's Birth rate & Death rate & Population Growth in regions categorized by income") +
+  ylab("") +
+  theme_linedraw()+
+  coord_flip()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+For regions categorized by geography in 2020: 
+```{r}
+bdpg_2020 <- Stats_by_Region_1972_2021 %>%
+  select ("SeN", "CoN", "2020") %>%
+  filter(SeN == "Birth rate, crude (per 1,000 people)" | SeN == "Death rate, crude (per 1,000 people)" | SeN == "Population growth (annual %)") %>%
+  select(-"SeN")
+```
+
+```{r}
+bdpg_2020_b <- bdpg_2020[1:9,]
+bdpg_2020_d <- bdpg_2020[10:18,]
+bdpg_2020_g <- bdpg_2020[19:27,]
+bdpg_2020_clean <- cbind(bdpg_2020_b, bdpg_2020_d, bdpg_2020_g)
+bdpg_2020_clean <- bdpg_2020_clean[!duplicated(as.list(bdpg_2020_clean))]
+setnames(bdpg_2020_clean, old = c("2020","2020.1", "2020.2"), new = c("rbirth", "rdeath", "gpop"))
+bdpg_2020_clean$rbirth <- as.numeric(bdpg_2020_clean$rbirth)/10
+bdpg_2020_clean$rdeath <- as.numeric(bdpg_2020_clean$rdeath)/10
+```
+
+```{r}
+bdp_2020_clean %>%
+  gather(key='geography',value='value',rbirth, rdeath, gpop) %>%
+  ggplot(aes(x=value, y=fct_reorder2(CoN, geography == "gpop",value,.desc=FALSE), color = geography)) +
+  geom_point() +
+  ggtitle("2020's Birth rate & Death rate & Population Growth in regions categorized by income") +
+  ylab("") +
+  theme_linedraw()+
+  coord_flip()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+
+## How have birth rates changed cross-sectionally by country?
+Scatter plot:  
+x = birth rate by country in 1980  
+y = birth rate by country in 2020
+
+## How has world longevity evolved over the past decades? 
+Ridgeline plot (by country):  
+x = Life expectancy at birth, total (years)  
+y = 1980, 1990, 2000, 2010, 2020
+
+#How does income category affect longevity? 
+Ridgeline plots x 5 (1980, 1990, 2000, 2010, 2020) (income table):  
+x = Life expectancy at birth, total (years)  
+y = income category [income table]
+
+#How does income category affect death rates of difference causes? 
+Heat map (or mosaic plot) (income table, 2020):  
+vertical cut = income category  
+horizontal cut =  
+Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)  
+Cause of death, by injury (% of total)  
+Cause of death, by non-communicable diseases (% of total)
+
+#How do labor force and quality affect economic development? 
+Parallel coordinate plot (by country):  
+2020 divided by 2000:  
+GNI per capita growth 
