@@ -53,7 +53,13 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 ```
 
 
-## Which regions have the youngest / oldest population?
+## Current situation and historical trends
+
+**Question 1: How have the world and regional populations evolved over the past 5 decades?**
+
+
+
+**Question 5: Which regions have the youngest / oldest population?**
 
 ```{r}
 ##################################
@@ -92,7 +98,16 @@ ggplot(data = AgeGroup_Region) +
 ```
 
 
-## Is there any gender asymmetry in the birth rate and longevity?
+**Question 3: Which regions have had the highest / lowest birth rate, death rate, and population growth?**
+
+
+**Question 4: How have birth rates changed cross-sectionally by country?**
+
+
+**Question 5: How has world longevity evolved over the past decades?**
+
+
+**Question 6: Is there any gender asymmetry in the birth rate and longevity?**
 
 
 ```{r}
@@ -176,13 +191,12 @@ ggplot(data = GenderLongevityDiff_Country) +
   # theme(legend.position = "none")
 ```
 
+## Pattern and relationships
 
-
-## How do other demographic factors affect birth rate?
+**Question 7: How do other demographic factors affect birth rate?**
 
 
 ![](/data/fig_7.1.png)
-
 ![](/data/fig_7.2.png)
 
 
@@ -239,7 +253,7 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
 
 
 
-## How do non-demographic factors (economic, healthcare, and education) affect birth rate?
+**Question 8: How do non-demographic factors (economic, healthcare, and education) affect birth rate?**
 
 ![](/data/fig_8.png)
 
@@ -277,5 +291,14 @@ draw_biplot(BirthRate_OtherFactors_Country)
 
 
 
+**Question 9: How does income category affect longevity?**
+
+
+
+**Question 10: How does income category affect death rates of difference causes?**
+
+
+
+**Question 11 How do labor force and quality affect economic development?**
 
 
