@@ -310,14 +310,34 @@ ggplot(L_T_clean, aes(x = Life_expectancy_at_birth, y = Years)) +
   ylab("Years")
 ```
 
-
 ##################################
 ##########  Question 9  ##########
 ##################################
 
-Ridgeline plots x 5 (1980, 1990, 2000, 2010, 2020) (income table):  
-x = Life expectancy at birth, total (years)  
-y = income category [income table]
+```{r}
+Income_Lexpect <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Life expectancy at birth, total (years)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+```
+
+```{r}
+#pivot_longer
+Income_Lexpect_clean <- Income_Lexpect %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
+
+Income_Lexpect_clean$Life_expectancy_at_birth <- as.numeric(Income_Lexpect_clean$Life_expectancy_at_birth)
+Income_Lexpect_clean$Years <- as.numeric(Income_Lexpect_clean$Years)
+
+Income_Lexpect_clean <- Income_Lexpect_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Life_expectancy_at_birth))
+```
+
+```{r}
+ggplot(Income_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ggtitle("Life expectancy at birth in regions categorized by income level")
+```
 
 ##################################
 ##########  Question 10 ##########
@@ -330,6 +350,24 @@ Cause of death, by communicable diseases and maternal, prenatal and nutrition co
 Cause of death, by injury (% of total)  
 Cause of death, by non-communicable diseases (% of total)
 
+```{r}
+Income_Cdeath <- Stats_by_Income_1972_2021 %>%
+  select ("SeN", "CoN", "2019") %>%
+  filter(SeN == "Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)" | SeN == "Cause of death, by injury (% of total)" | SeN == "Cause of death, by non-communicable diseases (% of total)")
+Income_Cdeath$"2019"<- as.numeric(Income_Cdeath$"2019")
+Income_Cdeath$SeN <- replace(Income_Cdeath$SeN, Income_Cdeath$SeN == "Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)","communicable")
+Income_Cdeath$SeN <- replace(Income_Cdeath$SeN, Income_Cdeath$SeN == "Cause of death, by injury (% of total)","injury")
+Income_Cdeath$SeN <- replace(Income_Cdeath$SeN, Income_Cdeath$SeN == "Cause of death, by non-communicable diseases (% of total)","non-communicable")
+```
+
+```{r}
+ggplot(Income_Cdeath, aes(x = CoN, y = SeN)) +
+  geom_tile(aes(fill = Income_Cdeath$"2019"), color = "white") +
+  coord_fixed()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+
+  ggtitle("2019's causes of death in different income categories")
+```
+
 ##################################
 ##########  Question 11 ##########
 ##################################
@@ -337,3 +375,8 @@ Cause of death, by non-communicable diseases (% of total)
 Parallel coordinate plot (by country):  
 2020 divided by 2000:  
 GNI per capita growth 
+
+```{r}
+
+```
+
