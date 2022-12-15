@@ -222,6 +222,9 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
   labs(title = 'Birth Rate per 1000 ppl ~ Women Age at First Marriage', x = 'Women Age at First Marriage', y = 'Birth Rate per 1000 ppl')
 
 ```
+(/data/fig_7.1.png)
+(/data/fig_7.2.png)
+
 
 
 

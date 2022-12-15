@@ -53,6 +53,8 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 ```
 
 
+## Which regions have the youngest / oldest population?
+
 ```{r}
 ##################################
 ##########  Question 2  ##########
@@ -88,6 +90,9 @@ ggplot(data = AgeGroup_Region) +
   scale_x_reverse() +
   guides(fill = guide_legend('Age Group'))
 ```
+
+
+## Is there any gender asymmetry in the birth rate and longevity?
 
 
 ```{r}
@@ -172,6 +177,15 @@ ggplot(data = GenderLongevityDiff_Country) +
 ```
 
 
+
+## How do other demographic factors affect birth rate?
+
+![fig_7.1](C:/Users/David/Documents/Git/LaborStat/data/fig_7.1.png)
+
+
+![](/data/fig_7.2.png)
+
+
 ```{r}
 ##################################
 ##########  Question 7  ##########
@@ -224,6 +238,11 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
 ```
 
 
+
+## How do non-demographic factors (economic, healthcare, and education) affect birth rate?
+
+![](/data/fig_8.png)
+
 ```{r}
 ##################################
 ##########  Question 8  ##########
@@ -255,8 +274,6 @@ BirthRate_OtherFactors_Country <- BirthRate_OtherFactors_Country %>%
 draw_biplot(BirthRate_OtherFactors_Country)
 
 ```
-
-
 
 
 

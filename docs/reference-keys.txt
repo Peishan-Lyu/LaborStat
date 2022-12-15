@@ -15,3 +15,7 @@ data-format
 options
 known-issues
 plots-plan
+which-regions-have-the-youngest-oldest-population
+is-there-any-gender-asymmetry-in-the-birth-rate-and-longevity
+how-do-other-demographic-factors-affect-birth-rate
+how-do-non-demographic-factors-economic-healthcare-and-education-affect-birth-rate
