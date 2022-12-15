@@ -16,9 +16,6 @@
       div.tooltip {
         fill = blue;
       }
-      circle {
-        fill: #00a4ff
-      }
       circle:hover {
         fill: #ffb900;
       }
@@ -26,25 +23,13 @@
   </head>
   <body>
     <div>
-      <h3>  Birth Rate, Death Rate and Population Growth Across different Regions</h3>
-      <p> <i> When you hover over on the points, you can see the exact number of birth rate, death rate and population growth</i></p>
-    </div>
-    
-    <div id = "options">
-    <form id="options" action="" class="radioButtons">
-      <input type="radio" name="options" id = "birthrate" value="B" checked="true"checked>Brith Rate
-      <input type="radio" name="options" id = "deathrate" value="D">Death Rate
-      <input type="radio" name="options" id = "populationgrowth" value="P">Population Growth
-    
-    </form>
+      <h3>  Birth Rate and Death Rate Across different Regions</h3>
+      <p> <i> When you hover over on the points, you can see the exact number of the birth rate and the death rate</i></p>
     </div>
     
     
     <script type="text/javascript">
     
-    
-    
-    d3.select("body").select("svg").remove();
         var w = 850;
         var h = 500;
         var margin = {top: 25, right: 100, bottom: 50, left: 250};
@@ -157,9 +142,10 @@
           .attr("cx", d => xScale(d.rbirth))
           .attr("cy", d => yScale(d.country_name) )
           .attr("r", 2.5)
+          .attr("fill", "#b7410e")
           .on("mouseover", function(event, d) {
-            var xcoord = +d3.select(event.currentTarget).attr("cx") + 5
-            var ycoord = +d3.select(event.currentTarget).attr("cy") - 5
+            var xcoord = +d3.select(event.currentTarget).attr("cx") + 2
+            var ycoord = +d3.select(event.currentTarget).attr("cy") - 2
             svg.select("g#plot")
               .append("text")
               .attr("id", "tooltip")
@@ -171,6 +157,60 @@
               d3.select("#tooltip").remove();
                  }
                  );
+
+        plot.data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.rdeath))
+          .attr("cy", d => yScale(d.country_name) )
+          .attr("r", 2.5)
+          .attr("fill", "#445597")
+          .on("mouseover", function(event, d) {
+            var xcoord = +d3.select(event.currentTarget).attr("cx") + 2
+            var ycoord = +d3.select(event.currentTarget).attr("cy") - 2
+            svg.select("g#plot")
+              .append("text")
+              .attr("id", "tooltip")
+              .attr("x", xcoord)
+              .attr("y", ycoord)
+              .text(d.rdeath);
+                 })
+          .on("mouseout", function() {
+              d3.select("#tooltip").remove();
+                 }
+                 );
+        
+        plot.data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.gpop))
+          .attr("cy", d => yScale(d.country_name) )
+          .attr("r", 2.5)
+          .attr("fill", "#25b5af")
+          .on("mouseover", function(event, d) {
+            var xcoord = +d3.select(event.currentTarget).attr("cx") + 2
+            var ycoord = +d3.select(event.currentTarget).attr("cy") - 2
+            svg.select("g#plot")
+              .append("text")
+              .attr("id", "tooltip")
+              .attr("x", xcoord)
+              .attr("y", ycoord)
+              .text(d.gpop);
+                 })
+          .on("mouseout", function() {
+              d3.select("#tooltip").remove();
+                 }
+                 );
+        
+        // ADD: Legend
+        svg.append("circle").attr("cx",innerWidth + 210).attr("cy",100).attr("r", 3).style("fill", "#b7410e")
+        svg.append("circle").attr("cx",innerWidth + 210).attr("cy",130).attr("r", 3).style("fill", "#445597")
+        svg.append("circle").attr("cx",innerWidth + 210).attr("cy",160).attr("r", 3).style("fill", "#25b5af")
+        
+        svg.append("text").attr("x", innerWidth + 220).attr("y", 100).text("Birth Rate").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", innerWidth + 220).attr("y", 130).text("Death Rate").style("font-size", "15px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", innerWidth + 220).attr("y", 160).text("Population Growth").style("font-size", "15px").attr("alignment-baseline","middle")
+             
         // ADD: create caption
         d3.select("body")
           .append("div")
@@ -183,4 +223,3 @@
         </script>
     </body>
 </html>
-      
