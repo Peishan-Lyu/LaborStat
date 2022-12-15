@@ -111,7 +111,24 @@ ggplot(Geo_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
   ggtitle("Total Population in regions categorized by geography")
 ```
 
-**Mosaic chart**
+**Percent stacked bar plot**
+
+```{r}
+ggplot(Income_population_clean, aes(x = Years, y = Total_Population, fill = CoN)) +
+  geom_bar(position = "fill",stat = "identity") +
+  ggtitle("Change of the relative frequency of population in different regions categorized by income with time")
+```
+
+
+```{r}
+ggplot(Geo_population_clean, aes(x = Years, y = Total_Population, fill = CoN)) +
+  geom_bar(position = "fill",stat = "identity") +
+  ggtitle("Change of the relative frequency of population in different regions categorized by geography with time")
+```
+
+
+
+
 
 ##################################
 ##########  Question 3  ##########
