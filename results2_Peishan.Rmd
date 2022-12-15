@@ -376,7 +376,143 @@ Parallel coordinate plot (by country):
 2020 divided by 2000:  
 GNI per capita growth 
 
-```{r}
+2000:  
+Labor force total / Population total  
+Urban population (% of total population)  
+Literacy rate, adult total (% of people ages 15 and above)  
+School enrollment, secondary (% gross)  
+School enrollment, tertiary (% gross)  
 
+```{r}
+GNI_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "2000", "2020") %>%
+  filter(SeN == "GNI per capita, Atlas method (current US$)")
+Tpop_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Population, total")
+Lforce_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Labor force, total")
+Upop_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Urban population (% of total population)")
+Lrat_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Literacy rate, adult total (% of people ages 15 and above)")
+Ses_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "School enrollment, secondary (% gross)")
+Set_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "School enrollment, tertiary (% gross)")
+```
+
+a. Labor force total / Population total vs. GNI Growth
+```{r}
+GNI_Tpop <- cbind(GNI_0020,Tpop_0020,Lforce_0020)
+GNI_Tpop <- GNI_Tpop[!duplicated(as.list(GNI_Tpop))]
+GNI_Tpop[GNI_Tpop == '..'] <- NA
+GNI_Tpop <- GNI_Tpop %>% 
+  drop_na()
+GNI_Tpop$"2000" <- as.numeric(GNI_Tpop$"2000")
+GNI_Tpop$"2020" <- as.numeric(GNI_Tpop$"2020")
+GNI_Tpop$"2000.1" <- as.numeric(GNI_Tpop$"2000.1")
+GNI_Tpop$"2000.2" <- as.numeric(GNI_Tpop$"2000.2")
+GNI_Tpop <- GNI_Tpop %>% 
+  mutate(GNI_Growth = (GNI_Tpop$"2020"-GNI_Tpop$"2000"/GNI_Tpop$"2000")) %>% 
+  mutate(Labor_Pop = (GNI_Tpop$"2000.2"/GNI_Tpop$"2000.1")) %>%
+  select("CoN","GNI_Growth","Labor_Pop")
+```
+
+```{r}
+ggparcoord(GNI_Tpop, columns = 3:2, alphaLines = .3)+
+  ggtitle("Labor force total / Population total vs. GNI")
+```
+
+b. Urban population (% of total population) vs. GNI Growth
+```{r}
+GNI_Upop <- cbind(GNI_0020,Upop_0020)
+GNI_Upop <- GNI_Upop[!duplicated(as.list(GNI_Upop))]
+GNI_Upop[GNI_Upop == '..'] <- NA
+GNI_Upop <- GNI_Upop %>% 
+  drop_na()
+GNI_Upop$"2000" <- as.numeric(GNI_Upop$"2000")
+GNI_Upop$"2020" <- as.numeric(GNI_Upop$"2020")
+GNI_Upop$"2000.1" <- as.numeric(GNI_Upop$"2000.1")
+GNI_Upop <- GNI_Upop %>% 
+  mutate(GNI_Growth = (GNI_Upop$"2020"-GNI_Upop$"2000"/GNI_Upop$"2000")) %>% 
+  mutate(Urban_Pop = (GNI_Upop$"2000.1")) %>%
+  select("CoN","GNI_Growth","Urban_Pop")
+```
+
+```{r}
+ggparcoord(GNI_Upop, columns = 3:2, alphaLines = .3)+
+  ggtitle("Urban population (% of total population) vs. GNI Growth")
+```
+
+c. Literacy rate, adult total (% of people ages 15 and above)  vs. GNI Growth
+
+```{r}
+GNI_Lrat <- cbind(GNI_0020,Lrat_0020)
+GNI_Lrat <- GNI_Lrat[!duplicated(as.list(GNI_Lrat))]
+GNI_Lrat[GNI_Lrat == '..'] <- NA
+GNI_Lrat <- GNI_Lrat %>% 
+  drop_na()
+GNI_Lrat$"2000" <- as.numeric(GNI_Lrat$"2000")
+GNI_Lrat$"2020" <- as.numeric(GNI_Lrat$"2020")
+GNI_Lrat$"2000.1" <- as.numeric(GNI_Lrat$"2000.1")
+GNI_Lrat <- GNI_Lrat %>% 
+  mutate(GNI_Growth = (GNI_Lrat$"2020"-GNI_Lrat$"2000"/GNI_Lrat$"2000")) %>% 
+  mutate(Literacy_adult = (GNI_Lrat$"2000.1")) %>%
+  select("CoN","GNI_Growth","Literacy_adult")
+```
+
+```{r}
+ggparcoord(GNI_Lrat, columns = 3:2, alphaLines = .3)+
+  ggtitle("Literacy rate, adult total (% of people ages 15 and above) vs. GNI Growth")
+```
+
+d. School enrollment, secondary (% gross)  vs. GNI Growth
+
+```{r}
+GNI_Ses <- cbind(GNI_0020,Ses_0020)
+GNI_Ses <- GNI_Ses[!duplicated(as.list(GNI_Ses))]
+GNI_Ses[GNI_Ses == '..'] <- NA
+GNI_Ses <- GNI_Ses %>% 
+  drop_na()
+GNI_Ses$"2000" <- as.numeric(GNI_Ses$"2000")
+GNI_Ses$"2020" <- as.numeric(GNI_Ses$"2020")
+GNI_Ses$"2000.1" <- as.numeric(GNI_Ses$"2000.1")
+GNI_Ses <- GNI_Ses %>% 
+  mutate(GNI_Growth = (GNI_Ses$"2020"-GNI_Ses$"2000"/GNI_Ses$"2000")) %>% 
+  mutate(Secondary_enrollment = (GNI_Ses$"2000.1")) %>%
+  select("CoN","GNI_Growth","Secondary_enrollment")
+```
+
+```{r}
+ggparcoord(GNI_Ses, columns = 3:2, alphaLines = .3)+
+  ggtitle("School enrollment, secondary (% gross) vs. GNI Growth")
+```
+
+e. School enrollment, tertiary (% gross) vs. GNI Growth
+
+```{r}
+GNI_Set <- cbind(GNI_0020,Set_0020)
+GNI_Set <- GNI_Set[!duplicated(as.list(GNI_Set))]
+GNI_Set[GNI_Set == '..'] <- NA
+GNI_Set <- GNI_Set %>% 
+  drop_na()
+GNI_Set$"2000" <- as.numeric(GNI_Set$"2000")
+GNI_Set$"2020" <- as.numeric(GNI_Set$"2020")
+GNI_Set$"2000.1" <- as.numeric(GNI_Set$"2000.1")
+GNI_Set <- GNI_Set %>% 
+  mutate(GNI_Growth = (GNI_Set$"2020"-GNI_Set$"2000"/GNI_Set$"2000")) %>% 
+  mutate(Tertiary_enrollment = (GNI_Set$"2000.1")) %>%
+  select("CoN","GNI_Growth","Tertiary_enrollment")
+```
+
+```{r}
+ggparcoord(GNI_Set, columns = 3:2, alphaLines = .3)+
+  ggtitle("School enrollment, tertiary (% gross) vs. GNI Growth")
 ```
 
