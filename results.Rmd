@@ -6,11 +6,13 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ```{r}
 library(readr)
-library(dplyr)
-library(data.table)
-library(data.table)
 library(ggplot2)
+library(dplyr)
 library(forcats)
+library(tidyverse)
+library(GGally)
+library(cowplot)
+library(data.table)
 ```
 
 
@@ -21,23 +23,23 @@ Stats_by_Income_1972_2021 <- read_csv("data/Stats_by_Income_1972-2021.csv", na =
 Stats_by_Region_1972_2021 <- read_csv("data/Stats_by_Region_1972-2021.csv", na = "NA")
 ```
 
-###Region data
 
 ```{r}
+###Region data
 # Rename Columns
 setnames((Stats_by_Region_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
 colnames(Stats_by_Region_1972_2021) <- substring(colnames(Stats_by_Region_1972_2021), 1, 4)
 ```
 
-###Income data
 ```{r}
+###Income data
 # Rename Columns
 setnames((Stats_by_Income_1972_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
 colnames(Stats_by_Income_1972_2021) <- substring(colnames(Stats_by_Income_1972_2021), 1, 4)
 ```
 
-###Country data
 ```{r}
+###Country data
 common_col_names <- intersect(names(Stats_by_Country_1972_1996), names(Stats_by_Country_1997_2021))
 Stats_by_Country_1972_2021 <- merge(Stats_by_Country_1972_1996, Stats_by_Country_1997_2021, all.x = TRUE)
 ```
@@ -49,11 +51,11 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 ```
 
 
-
+```{r}
 ##################################
 ##########  Question 2  ##########
 ##################################
-```{r}
+
 Q2_fields = c('SP.POP.0014.TO.ZS', 'SP.POP.1564.TO.ZS', 'SP.POP.65UP.TO.ZS')
 
 AgeGroup_Region <- Stats_by_Region_1972_2021 %>%
@@ -86,11 +88,11 @@ ggplot(data = AgeGroup_Region) +
 ```
 
 
+```{r}
 ##################################
 ##########  Question 6  ##########
 ##################################
 
-```{r}
 # Birth by gender data
 GenderBirth_Income <- Stats_by_Income_1972_2021 %>%
   filter(SeC == 'SP.POP.BRTH.MF') %>%

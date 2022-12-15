@@ -50,11 +50,11 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 
 
 
-
+```{r}
 ##################################
 ##########  Question 2  ##########
 ##################################
-```{r}
+
 Q2_fields = c('SP.POP.0014.TO.ZS', 'SP.POP.1564.TO.ZS', 'SP.POP.65UP.TO.ZS')
 
 AgeGroup_Region <- Stats_by_Region_1972_2021 %>%
@@ -84,14 +84,15 @@ ggplot(data = AgeGroup_Region) +
   scale_fill_manual(labels = c('0-14', '15-64', '65 and above'), values = c('#619CFF', '#00BA38', '#F8766D')) +
   scale_x_reverse() +
   guides(fill = guide_legend('Age Group'))
-
 ```
 
+
+
+```{r}
 ##################################
 ##########  Question 6  ##########
 ##################################
 
-```{r}
 # Birth by gender data
 GenderBirth_Income <- Stats_by_Income_1972_2021 %>%
   filter(SeC == 'SP.POP.BRTH.MF') %>%
@@ -166,16 +167,29 @@ ggplot(data = GenderLongevityDiff_Country) +
   geom_point(aes(x = Diff, y = reorder(CoN, Diff))) +
   labs(title = 'Gender Difference - Longevity', x = 'Life Expectancy (Female - Male)', y = 'Top and Bottom Countries') +
   theme(legend.position = "none")
-
-
 ```
-
 
 
 
 ##################################
 ##########  Question 7  ##########
 ##################################
+
+Q7_fields = c(''SP.POP.TOTL.FE.ZS', 'SP.POP.1519.FE.5Y', 'SP.POP.2024.FE.5Y', 'SP.POP.2529.FE.5Y', 'SP.POP.3034.FE.5Y', 'SP.POP.3539.FE.5Y', 'SP.POP.4044.FE.5Y', 'SP.POP.4549.FE.5Y')
+
+BirthRate_Demo_Country <- Stats_by_Country_1972_2021 %>%
+  filter(SeC %in% Q7_fields) %>%
+  select(c('SeC', 'SeN', 'CoN', '1980', '2020')) %>%
+  pivot_longer(cols = !c('SeC', 'SeN', 'CoN'), names_to = 'Year', values_to = 'Percent')
+
+# Convert and sort
+AgeGroup_Region$Percent <- as.numeric(AgeGroup_Region$Percent)
+young_sorted = AgeGroup_Region[AgeGroup_Region$SeC == 'SP.POP.0014.TO.ZS'
+                               & AgeGroup_Region$Year == '2020', c('CoN', 'Percent')] %>%
+  arrange(Percent)
+AgeGroup_Region$CoN = factor(AgeGroup_Region$CoN, levels = young_sorted$CoN)
+
+
 
 
 
