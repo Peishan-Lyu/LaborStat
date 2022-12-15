@@ -1,3 +1,65 @@
+--- 
+title: "World Demographics Study – a Visualization Perspective"
+author: "Yuxiao Liu, Peishan Lyu, Fan Wu"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+--- 
+title: "World Demographics Study – a Visualization Perspective"
+author: "Yuxiao Liu, Peishan Lyu, Fan Wu"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+Demographics might not be the hottest buzzword today in Economics or Sociology, but has always been an area of great significance, due to the humongous influence that it exerts to human societies over the long horizon, both in the past and in the future.
+Some statements on demographics are very well known, such as: Europe, Russia and Japan have been suffering low birth rate and aging population problems which may impede their prosperity in the coming decades. Some forecasts are surprising, such as the one shown in class (“Spatial Data” section): By 2100, Africa’s population will overtake Asia which used to be home of 2/3 of world population just two centuries ago. Some recent developments are eyecatching, such as: world population reached 8 billion in 2022, and that India’s population is set to surpass China’s in 2023.
+
+In this project, we aim to achieve two goals, in a visualization approach:
+1. Highlight the current situation of world demographics, and the historical trends of the past decades, by region and country.
+2. Look for patterns and relationships, both among demographic factors, and between demographic factors and other indicators (e.g. economic, educational, medical).
+
+<!--chapter:end:index.Rmd-->
+
+
+# Proposal
+
+Placeholder
+
+
+## Research topic
+## Data availability
+## Plots plan
+
+<!--chapter:end:proposal.Rmd-->
+
+
+# Data 
+
+Placeholder
+
+
+## Sources
+## Cleaning / transformation
+## Missing value analysis
+
+<!--chapter:end:data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
 # Results
 
 ```{r setup, include=FALSE}
@@ -278,4 +340,32 @@ draw_biplot(BirthRate_OtherFactors_Country)
 
 
 
+
+
+<!--chapter:end:results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+
+<!--chapter:end:interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:conclusion.Rmd-->
 
