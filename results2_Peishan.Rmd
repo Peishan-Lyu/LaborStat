@@ -18,6 +18,7 @@ library(GGally)
 library(cowplot)
 library(data.table)
 library(plotly)
+library(ggridges)
 ```
 
 ```{r}
@@ -260,7 +261,6 @@ brpt_8020$br1980 <- as.numeric(brpt_8020$br1980)
 brpt_8020$br2020 <- as.numeric(brpt_8020$br2020)
 ```
 
-
 ```{r}
 brpt_8020_p <- brpt_8020 %>%
   ggplot(aes(br1980, br2020, color = CoN))+
@@ -272,9 +272,43 @@ ggplotly(brpt_8020_p)
 ##################################
 ##########  Question 5  ##########
 ##################################
+
 Ridgeline plot (by country):  
 x = Life expectancy at birth, total (years)  
 y = 1980, 1990, 2000, 2010, 2020
+
+```{r}
+Lexpect <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "1990","2000", "2010", "2020") %>%
+  filter(SeN == "Life expectancy at birth, total (years)")
+Tpop <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "1980", "1990","2000", "2010", "2020") %>%
+  filter(SeN == "Population, total")
+L_T <- cbind(Lexpect, Tpop)
+L_T <- L_T[!duplicated(as.list(L_T))]
+setnames(L_T, old = c("1980.1","1990.1","2000.1","2010.1","2020.1"), new = c("Pop1980","Pop1990","Pop2000","Pop2010","Pop2020"))
+L_T <- L_T %>%
+  filter(as.numeric(Pop1980) > 1000000 & as.numeric(Pop1990) > 1000000 & as.numeric(Pop2000) > 1000000 & as.numeric(Pop2010) > 1000000 & as.numeric(Pop2020) > 1000000) %>%
+  select(-c("SeN","SeN.1", "Pop1980","Pop1990","Pop2000","Pop2010","Pop2020"))
+L_T$"1980" <- as.numeric(L_T$"1980")
+L_T$"1990" <- as.numeric(L_T$"1990")
+L_T$"2000" <- as.numeric(L_T$"2000")
+L_T$"2010" <- as.numeric(L_T$"2010")
+L_T$"2020" <- as.numeric(L_T$"2020")
+```
+
+```{r}
+L_T_clean <- L_T %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
+L_T_clean$Life_expectancy_at_birth <- as.numeric(L_T_clean$Life_expectancy_at_birth)
+```
+
+```{r}
+ggplot(L_T_clean, aes(x = Life_expectancy_at_birth, y = Years)) +
+  geom_density_ridges(fill = "blue",alpha = .5, scale = 1.2) +
+  ggtitle("World longevity over the past decades") +
+  ylab("Years")
+```
 
 
 ##################################
