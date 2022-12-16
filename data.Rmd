@@ -9,7 +9,7 @@ output:
 
 **Data Sources:**
 
-The World Bank’s database “Health Nutrition and Population Statistics” (https://databank.worldbank.org/source/health-nutrition-and-population-statistics) is a collection of a large number of series (fields).
+The World Bank’s database “Health Nutrition and Population Statistics” [link](https://databank.worldbank.org/source/health-nutrition-and-population-statistics) is a collection of a large number of series (fields).
 Different data fields are supplied by different entities:
 
 * Demographic data fields are mostly collected by United Nations Population Division.

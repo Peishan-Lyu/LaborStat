@@ -59,6 +59,13 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 
 **Question 1: How have the world population by country income category and by region evolved over the past decades?**
 
+For this question, we look at the population change by both country income category and geographical regions in the past 5 decades. We created both line charts for observing the trend and percentage bar charts for observing the population difference in different regions. 
+
+* The first two plots clearly show the trend of change in population in the past 5 decades. From the top chart we can see while regions in all income categories have an increasing trend, middle income region increased significantly more rapidly compared to regions in all other income categories. Lower middle income experienced the second greatest increase, while the rest regions have slight increase. It’s worth notice that though low income and least developed regions have the lower population total, OECD members and high-income regions experience the slightest population increase throughout the years. 
+From the bottom chart we can see East Asia & Pacific’s population increased significantly more rapidly compared to all other geographical regions. South Asia and Sub-Sahara regions also have a significantly increasing trend. However, many regions only have very slight increase over the 50 years, especially from 1990, like Middle east & North Africa and Euro area experienced a slight population increase from 1970 to 1990, and afterwards there is no recognizable increase. 
+* The last two plots clearly show the constitution of population while showing the trend of expansion / shrink of the colored areas. For example, from the top chart, we can see the increase in the red area throughout the years, indicating a significant increase in middle income population. The results are the same as we see from the line chart, while we could feel that bar chart makes it easier to compare population difference among different country income categories and geographical regions, namely low-income regions have much less population compared to middle income countries.  
+
+
 ```{r}
 Income_Population <- Stats_by_Income_1972_2021 %>%
   filter(SeN == "Population, total", !CoN %in% c("OECD members", "Middle income", "Least developed countries: UN classification")) %>%
@@ -167,6 +174,16 @@ ggplot(data = AgeGroup_Region) +
 
 <br>
 **Question 3: Which regions have had the highest / lowest birth rate, death rate, and population growth?**
+
+For this question, we compare the birth, death, and population growth rate in 1980 and 2020 by countries income category and geographical regions. In the dataset, the birth and death rate present in the form of number of births per 1000 people, we divide them by 10 to derive the number of births per 100 people. Since income and geographical regions are categorical, we create Cleveland dot plot and sort by population growth rate to observe the difference among regions.  
+
+* The first two plots show that 
+  + Though low income and least developed regions have very close population growth in 1980, the low income region experienced an increase while least developed regions experienced an decrease though the past 40 years, which makes the rate differ these days. 
+  + Many regions like lower middle income experienced a significant drop in population growth in the past 40 years except for low income countries. When we take a closer look, the extent that the death rate reduce exceeds the reduction of birth rate. Since in our current plots the x-axis don’t align with each other, which makes the comparison a little hard (To improve in the future: to compare birth rate between two years, we plot birth rate in two years in the same plot). The current plot makes it easier to see the gap between birth and death rate. 
+  + The gap between birth and death rate decreased for most regions. In 1980, regions in all income categories have birth rate significantly exceeds death rate, but in 2020, the gaps shrink. For example, the high income area has very close birth and death rate. 
+
+* The last two plots show that
+  + In all regions, the gap between birth and death rate decreased. In 1980, regions in all income categories have birth rate significantly exceeds death rate, but in 2020, we can see Euro area and European Union’s death rate exceeds birth rate. Regions like Middle East & Sub-Sahara experienced a significant decrease in population growth.  
 
 ```{r}
 # For regions categorized by income level in 1980: 
@@ -283,6 +300,14 @@ plot_grid(Geo_1980, Geo_2020, align = "v", nrow = 2)
 <br>
 **Question 4: How have birth rates changed cross-sectionally by country?**
 
+For this question, we created an interactive scatterplot to show the correlation in the birth per 1000 people in 1980 and 2020.  We can observe that they are positively correlated. We could move over each point and see the country each point correspond to. From the plot, countries tend to have a higher birth rate in 1980 compared to 2020, though the extent of difference varies. There are some countries might worth notice: 
+
+* Countries with relatively high birth rate in both years: Niger, Chad, Mali, Angola, Congo, Brundi, etc. 
+* Countries with relatively low birth rate in both years: Italy, Germany, Denmark, Netherlands, etc. 
+
+Those countries listed above are very easy to notice by looking at the top right and lower left corners. We could also search for countries with relatively low birth rate in 1980 and high in 2020 by looking at the upper left corner, and in our case, the most extreme one is Kazakhstan which have birth rate in both years very close to each other (23.9 in 1980 and 22.76 in 2020). Those with high birth rate in 1980 and low in 2020 locate near the lower right corner, and in our case, they are Puerto Rico, Oman, etc. 
+
+
 ```{r}
 br_8020 <- Stats_by_Country_1972_2021 %>%
   select ("SeN", "CoN", "1980", "2020") %>%
@@ -313,6 +338,10 @@ ggplotly(brpt_8020_p)
 <br>
 <br>
 **Question 5: How has world longevity evolved over the past decades?**
+
+In this plot, longevity is measured by life expectancy at birth for the total population in different countries. We dropped the countries with less than one million population and graphed the distribution of life expectancy in different countries in 1980, 1990, 2000, 2010, and 2020.
+
+There is a clear increasing trend in peaks, which moves toward 75 years old in from 1980 to 2010 and exceeds 75 years old in 2020. There is also a clear trend that the left tail is shrinking over the years, indicating the elimination of some countries with extremely low life expectancies. It is worth notice that there is a small peak around 50 years old in 2000, which could be caused by some special events. A potential source of bias for using ridgeline plot is that the total number of countries we have is limited, but the trend of shift in mode is displayed very clearly. 
 
 ```{r}
 Lexpect <- Stats_by_Country_1972_2021 %>%
@@ -552,6 +581,10 @@ draw_biplot(BirthRate_OtherFactors_Country)
 <br>
 **Question 9: How does country income category affect longevity?**
 
+For this question, we also used line chart to show the life expectancy among total population in different country income categories.
+
+We could see that regions with high income and those OECD members have the highest life expectancy among all and they share a very similar trend. It is very interesting to see a small decrease around current years only in these two regions but not in other regions. Upper middle income, middle income, and lower middle income regions share very similar increasing trend with high income and OECD members, though they have lower starting values. Low income and least developed countries seem to have a greater rate of increase compared to all the other regions. It is worth notice that there is an intersection between low income and least developed countries. From around 1985 to 1995, low income regions experienced very slow increase in life expectancy but a relative faster increase in life expectancy from 2000. Overall, the line chart gives a clear idea on the trend of change through time and difference in life expectancy among different countries. 
+
 ```{r}
 Income_Lexpect <- Stats_by_Income_1972_2021 %>%
   filter(SeN == "Life expectancy at birth, total (years)") %>%
@@ -580,6 +613,18 @@ ggplot(Income_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color 
 
 <br>
 **Question 10: How does country income category affect death percentages of difference causes?**
+
+We take the three different causes of death, namely "Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)", "Cause of death, by injury (% of total)", and "Cause of death, by non-communicable diseases (% of total)" in 2019 from the dataset to capture the difference between them in regions in different income categories. We take the data from 2019 since it is the closest year with data from all three variables in all regions available. 
+
+From this heatmap, we could clearly see that:
+
+* Communicable disease/maternal/prenatal/nutrition (for convenience we just use “communicable” to refer to all the disease types later) is a more prevalent cause of death in lower income countries. The effect of income is big since less that 10% of deaths in high income countries are caused by communicable deaths while about half of deaths in low income countries are by communicable deaths. 
+* Correspondingly, non-communicable disease is a more major cause of death in higher income countries. The effect of income is also big. 
+* Non-communicable disease is a very prevalent cause of death in high income countries since about 80-90% are caused by it. Though it is less prevalent in lower income countries, it still constitutes more than 40% of death. In contrast, communicable disease is not very prevalent in higher income countries. 
+* Injury is a more prevalent cause of death in lower income countries, but injury is not a prevalent cause of death among income in all levels, implying the effect of income is small on the prevalence of injury. 
+
+The transition of colors enables us to clearly see the most prevalent cause of death in a given region. Also, it enables us to clearly see for a given cause, in which countries it plays a more important role in causing the death. Colors give us a general idea on the extent of difference, while the labels is important in making the difference precise. 
+
 
 ```{r}
 ##################################
@@ -613,6 +658,22 @@ ggplot(Income_Cdeath, aes(x = fct_reorder2(CoN, SeN == "Communicable Diseases", 
 
 <br>
 **Question 11: How do labor quality affect economic development?**
+
+For this question, we created a scatterplot matrix to mainly look at how some labor force and quality indicators such as 
+
+* Labor force participation rate in 2000 ("%oLabor.population”) 
+  + Calculated by labor force total/population total
+
+* The percent of urban population of total population in 2000 ("%Urban.population”)
+* Literacy rate in 2020 (eliminated because lack of data) ("%Secondary.enroll”) 
+  + The percentage of people who are 15 years old and above who are literate
+
+* The percentage of people who enroll in secondary school in 2000 ("%Secondary.enroll")
+* The percentage of people who enroll in tertiary school in 2000 "(%Tertiary.enroll")
+affect economic development. We use growth of GNI per capita as the measure of economic development. More precisely, since we take dependent variables measured in 2000, we calculate GNI growth by using the percentage increase in GNI from 2000 to 2020 (%GNI.Growth"). 
+
+In this plot, the first row reveals the effect of each labor force quality indicator on GNI growth, there is no strong positive or negative correlation between GNI and any dependent variable. A weak negative correlation could be observed for urban population percentage, percentage of secondary school enrollment, and percentage of tertiary enrollment. In addition to observing the correlation between independent and dependent variables, scatterplot matrix allows us to explore the correlation between dependent variables. We could see some strong positive correlations like secondary vs. tertiary enrollment, urban population percentage vs. secondary/tertiary enrollment, secondary/tertiary enrollment vs. labor force participation rate, etc. To improve on this plot, we may label “r=…” on the plot, make an interact plot to see the correspondence of dots and countries for further analyzing the reason behind correlations, etc. 
+
 
 ```{r}
 GNI_0020 <- Stats_by_Country_1972_2021 %>%
