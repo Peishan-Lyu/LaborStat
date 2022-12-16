@@ -1,5 +1,5 @@
 --- 
-title: "World Demographics Study – a Visualization Perspective"
+title: "World Demographics Study – from an Exploratory and Visualized Perspective"
 author: "Yuxiao Liu, Peishan Lyu, Fan Wu"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
