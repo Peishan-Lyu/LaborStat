@@ -63,7 +63,7 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 ```{r}
 Income_Population <- Stats_by_Income_1972_2021 %>%
   filter(SeN == "Population, total", !CoN %in% c("OECD members", "Middle income", "Least developed countries: UN classification")) %>%
-  select(-c("SeN","SeC","CoC")) 
+  select(-c("SeN","SeC","CoC"))
 #pivot_longer
 Income_population_clean <- Income_Population %>%
   pivot_longer(cols = !CoN, names_to = "Years", values_to = "Total_Population")
@@ -346,7 +346,7 @@ L_T_clean$Life_expectancy_at_birth <- as.numeric(L_T_clean$Life_expectancy_at_bi
 
 ggplot(L_T_clean, aes(x = Life_expectancy_at_birth, y = Years)) +
   geom_density_ridges(fill = "blue",alpha = .5, scale = 1.2) +
-  ggtitle("World Life Expectancy 1980-2020") +
+  ggtitle("World Life Expectancy (1980-2020)") +
   ylab("Years") +
   xlab("Life Expectancy at Birth")
 ```
@@ -425,20 +425,20 @@ nrow = dim(GenderLongevityDiff_Country)[1]
 GenderLongevityDiff_Country <- bind_rows(GenderLongevityDiff_Country[1:10,], GenderLongevityDiff_Country[(nrow - 9):nrow,])
 
 ggplot(data = GenderBirth) +
-  geom_point(aes(x = Value, y = reorder(CoN, Value)), color = '#00BA38') +
+  geom_point(aes(x = Value, y = reorder(CoN, Value)), color = '#00BA38', size = 3) +
   labs(title = 'Gender Asymmetry - Birth Rate (2020)', x = 'Birth Ratio (Male/Female)', y = '') +
   facet_grid(Type ~ ., scales = 'free_y', space = 'free_y')
   # theme(legend.position = "none")
 
 ggplot(data = GenderLongevity) +
-  geom_point(aes(x = Value, y = reorder(CoN, Value), color = SeN)) +
+  geom_point(aes(x = Value, y = reorder(CoN, Value), color = SeN), size = 3) +
   labs(title = 'Gender Asymmetry - Longevity (2020)', x = 'Life Expectancy', y = '') +
   facet_grid(Type ~ ., scales = 'free_y', space = 'free_y') +
   scale_color_manual(labels = c('Female', 'Male'), values = c('#F8766D', '#619CFF')) +
   guides(color = guide_legend('Gender'))
 
 ggplot(data = GenderLongevityDiff_Country) +
-  geom_point(aes(x = Diff, y = reorder(CoN, Diff)), color = '#00BA38') +
+  geom_point(aes(x = Diff, y = reorder(CoN, Diff)), color = '#00BA38', size = 3) +
   labs(title = 'Gender Difference - Longevity (2020)', x = 'Life Expectancy (Female - Male)', y = 'Top and Bottom Countries')
   # theme(legend.position = "none")
 ```
@@ -557,12 +557,116 @@ draw_biplot(BirthRate_OtherFactors_Country)
 <br>
 **Question 9: How does income category affect longevity?**
 
+```{r}
+Income_Lexpect <- Stats_by_Income_1972_2021 %>%
+  filter(SeN == "Life expectancy at birth, total (years)") %>%
+  select(-c("SeN","SeC","CoC","2021"))
+
+#pivot_longer
+Income_Lexpect_clean <- Income_Lexpect %>%
+  pivot_longer(cols = !CoN, names_to = "Years", values_to = "Life_expectancy_at_birth")
+
+Income_Lexpect_clean$Life_expectancy_at_birth <- as.numeric(Income_Lexpect_clean$Life_expectancy_at_birth)
+Income_Lexpect_clean$Years <- as.numeric(Income_Lexpect_clean$Years)
+
+Income_Lexpect_clean <- Income_Lexpect_clean %>%
+  mutate(CoN = fct_reorder2(CoN, Years, Life_expectancy_at_birth))
+
+ggplot(Income_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color = CoN))+
+  geom_line()+
+  geom_point()+
+  ylab("Life Expectancy at Birth")+
+  ggtitle("Life Expectancy by Country Income Category") +
+  guides(color = guide_legend('Country Income Category'))
+```
+
+
+
 
 <br>
 **Question 10: How does income category affect death rates of difference causes?**
 
+```{r}
+##################################
+##########  Question 10 ##########
+##################################
+
+Income_Cdeath <- Stats_by_Income_1972_2021 %>%
+  select ("SeN", "CoN", "2019") %>%
+  filter(SeN == "Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)" | SeN == "Cause of death, by injury (% of total)" | SeN == "Cause of death, by non-communicable diseases (% of total)")
+Income_Cdeath$"2019"<- as.numeric(Income_Cdeath$"2019")
+Income_Cdeath$SeN <- replace(Income_Cdeath$SeN, Income_Cdeath$SeN == "Cause of death, by communicable diseases and maternal, prenatal and nutrition conditions (% of total)","Communicable diseases")
+Income_Cdeath$SeN <- replace(Income_Cdeath$SeN, Income_Cdeath$SeN == "Cause of death, by injury (% of total)","Injury")
+Income_Cdeath$SeN <- replace(Income_Cdeath$SeN, Income_Cdeath$SeN == "Cause of death, by non-communicable diseases (% of total)","Non-communicable diseases\n and maternal, prenatal\nand nutrition conditions")
+
+setnames((Income_Cdeath), old = "2019", new = "Percent_of_total")
+
+# x=fct_reorder2(CoN, SeN == "Communicable Diseases", value, .desc=FALSE)
+
+ggplot(Income_Cdeath, aes(x = fct_reorder2(CoN, SeN == "Communicable Diseases", Percent_of_total, .desc=FALSE), y = SeN)) +
+  geom_tile(aes(fill = Percent_of_total), color = "white") +
+  coord_fixed()+
+  scale_fill_distiller(palette = "Blues", direction = 1) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+
+  ggtitle("Causes of Death by Country Income Category (2019)")+
+  xlab("Country Income Category")+
+  ylab("Cause of Death") +
+  guides(fill = guide_legend('% of Total')) +
+  geom_text(aes(label = round(Percent_of_total, 1)), color = "orange")
+```
+
 
 <br>
 **Question 11 How do labor force and quality affect economic development?**
+
+```{r}
+GNI_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN", "CoN", "2000", "2020") %>%
+  filter(SeN == "GNI per capita, Atlas method (current US$)")
+Tpop_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Population, total")
+Lforce_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Labor force, total")
+Upop_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Urban population (% of total population)")
+Lrat_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "Literacy rate, adult total (% of people ages 15 and above)")
+Ses_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "School enrollment, secondary (% gross)")
+Set_0020 <- Stats_by_Country_1972_2021 %>%
+  select ("SeN","2000") %>%
+  filter(SeN == "School enrollment, tertiary (% gross)")
+
+Big_0020 <- cbind(GNI_0020, Tpop_0020,Lforce_0020,Upop_0020,Ses_0020,Set_0020)
+Big_0020[Big_0020 == '..'] <- NA
+Big_0020 <- Big_0020 %>% 
+  drop_na()
+Big_0020 <- Big_0020[!duplicated(as.list(Big_0020))]
+setnames(Big_0020,old = c("2000","2020","2000.1","2000.2","2000.3", "2000.4","2000.5"),new = c("GNI_2000","GNI_2020","Pop_2000","Labor_2000","PUrban_2000","PSec_2000","PTer_2000"))
+Big_0020$"GNI_2000" <- as.numeric(Big_0020$"GNI_2000")
+Big_0020$"GNI_2020" <- as.numeric(Big_0020$"GNI_2020")
+Big_0020$"Pop_2000" <- as.numeric(Big_0020$"Pop_2000")
+Big_0020$"Labor_2000" <- as.numeric(Big_0020$"Labor_2000")
+Big_0020$"PUrban_2000" <- as.numeric(Big_0020$"PUrban_2000")
+Big_0020$"PSec_2000" <- as.numeric(Big_0020$"PSec_2000")
+Big_0020$"PTer_2000" <- as.numeric(Big_0020$"PTer_2000")
+
+Big_0020 <- Big_0020 %>% 
+  select(c(CoN, GNI_2000, GNI_2020, Pop_2000, Labor_2000, PUrban_2000,PSec_2000,PTer_2000)) %>%
+  mutate(GNI_Growth_2020 = ((GNI_2020-GNI_2000)/GNI_2000)) %>%
+  mutate(Labor_Pop_2000 = (Labor_2000/Pop_2000))%>%
+  select(-c(CoN, GNI_2000, GNI_2020, Pop_2000, Labor_2000))
+Big_0020 <- Big_0020[, c("GNI_Growth_2020","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000")]
+
+setnames(Big_0020,old = c("GNI_Growth_2020","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000"),new = c("% GNI Growth","% Labor/Population","% Urban Population","% Secondary Enroll","% Tertiary Enroll"))
+
+plot(Big_0020, pch=20, col='steelblue')
+```
+
 
 
