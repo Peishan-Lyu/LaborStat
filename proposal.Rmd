@@ -4,7 +4,7 @@
 
 The first objective of this project is to highlight the current situation and historical trends. This shows us where we are, and where we have come from. These are the aspects we want to present:
 
-* How have the world and regional populations evolved over the past 5 decades?
+* How have the world population by income category and by region evolved over the past decades?
 * Which regions have the youngest / oldest population?
 * Which regions have had the highest / lowest birth rate, death rate, and population growth?
 * How have birth rates changed cross-sectionally by country?

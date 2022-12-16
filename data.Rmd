@@ -11,6 +11,7 @@ output:
 
 The World Bank’s database “Health Nutrition and Population Statistics” is a collection of a large number of series (fields).
 Different data fields are supplied by different entities:
+
 * Demographic data fields are mostly collected by United Nations Population Division.
 * Economic data fields are mostly collected by World Bank.
 * Educational data fields are mostly by United Nations Educational, Scientific and Cultural Organization.
@@ -46,16 +47,70 @@ Besides the collection of mutually exclusive and collectively exhaustive regions
 **Transformation:**
 
 The rows are the Cartesian product of the countries and fields.
+
 * If we select a single column (year) from the data table, the data is in tidy format. If necessary, we would apply pivot_wider() to send the fields to the columns.
 * If we select multiple columns (years) from the data table, we would first apply pivot_longer() to create a “Year” column and make the data tidy. If necessary, we would then apply pivot_wider() to send the fields to the columns.
 
 ## Missing value analysis
 
+As discussed above, some series (fields) are not available for 2021. For most of our analysis, the latest data available is 2019 or 2020.
+
+2019 appears to have much superior data completeness than 2020. However, 2020 already satisfies our needs to answer most of our questions. In each question, we'll figure out whether to use 2020 or 2019.
+
+* Based on the missing patterns of 2019, the fields with top missing percentages are:  
+  + SP.DYN.SMAM.FE:    Age at first marriage, female
+  + SE.ADT.LITR.ZS:    Literacy rate, adult total (% of people ages 15 and above)
+  + SE.SEC.ENRR:       School enrollment, secondary (% gross)
+  + SE.TER.ENRR.FE:    School enrollment, tertiary, female (% gross)
+  + SE.XPD.TOTL.GD.ZS: Public spending on education, total (% of GDP)
+  + SE.TER.ENRR:       School enrollment, tertiary (% gross)
+* The first  (SP.DYN.SMAM.FE) is only used in our Question 7. For that question, we atually used 2018, thus mitigated the issue. The results show that the relationship is very strong even though 2018 has less than half of the countries available.
+* The rest are all education related fields which are only used for Questions 8 and Question 11. We also examined other recent years, but the data completeness is not better. Therefore, we use 2019 for both these questions.
 
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
 
+```{r}
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(data.table)
+library(redav)
+```
 
+```{r}
+Stats_by_Country_1997_2021 <- read_csv("data/Stats_by_Country_1997-2021.csv", na = "NA")
+setnames((Stats_by_Country_1997_2021), old = c("Series Name","Series Code", "Country Name", "Country Code"), new = c("SeN", "SeC", "CoN", "CoC"))
+colnames(Stats_by_Country_1997_2021) <- substring(colnames(Stats_by_Country_1997_2021), 1, 4)
 
+Key_Data <- Stats_by_Country_1997_2021 %>%
+  filter(SeC %in% c('SP.POP.TOTL', 'SP.DYN.CBRT.IN', 'SP.DYN.CDRT.IN', 'SP.POP.GROW', 'SP.POP.BRTH.MF',
+                  'SP.DYN.LE00.IN', 'SP.DYN.LE00.MA.IN', 'SP.DYN.LE00.FE.IN',
+                  'SP.POP.0014.TO.ZS', 'SP.POP.1564.TO.ZS', 'SP.POP.65UP.TO.ZS',
+                  'SP.POP.TOTL.FE.ZS', 'SP.POP.1519.FE.5Y', 'SP.DYN.SMAM.FE',
+                  'NY.GNP.PCAP.CD', 'SL.TLF.TOTL.FE.ZS', 'SH.XPD.GHED.GD.ZS', 'SE.XPD.TOTL.GD.ZS', 'SE.TER.ENRR.FE',
+                  'SH.DTH.COMM.ZS', 'SH.DTH.INJR.ZS', 'SH.DTH.NCOM.ZS',
+                  'SL.TLF.TOTL.IN', 'SE.ADT.LITR.ZS', 'SE.SEC.ENRR', 'SE.TER.ENRR')) %>%
+  select(c('SeC', 'SeN', 'CoC', '2019', '2020'))
 
+Key_Data$`2019` = as.numeric(Key_Data$`2019`)
+Key_Data$`2020` = as.numeric(Key_Data$`2020`)
+```
 
+**Missing patterns 2019**
+```{r, fig.width = 40, fig.height = 30}
+Key_Data_2019 <- Key_Data %>%
+  select(c('SeC', 'SeN', 'CoC', '2019')) %>%
+  pivot_wider(id_cols = CoC, names_from = SeC, values_from = `2019`)
+plot_missing(Key_Data_2019, percent = FALSE)
+```
 
+**Missing patterns 2020**
+```{r, fig.width = 40, fig.height = 30}
+Key_Data_2020 <- Key_Data %>%
+  select(c('SeC', 'SeN', 'CoC', '2020')) %>%
+  pivot_wider(id_cols = CoC, names_from = SeC, values_from = `2020`)
+plot_missing(Key_Data_2020, percent = FALSE)
+```

@@ -57,8 +57,7 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 
 ## Current situation and historical trends
 
-**Question 1: How have the world and regional populations evolved over the past 5 decades?**
-
+**Question 1: How have the world population by income category and by region evolved over the past decades?**
 
 ```{r}
 Income_Population <- Stats_by_Income_1972_2021 %>%
@@ -87,10 +86,6 @@ Geo_population_clean <- Geo_population_clean %>%
 ```
 
 ```{r}
-##################################
-##########  Question 1  ##########
-##################################
-
 #Total population in regions categorized by income level and geography in the past 5 decades:
 TPop_Income <-
 ggplot(Income_population_clean, aes(x = Years, y = Total_Population, color = CoN))+
@@ -621,7 +616,7 @@ ggplot(Income_Cdeath, aes(x = fct_reorder2(CoN, SeN == "Communicable Diseases", 
 
 ```{r}
 GNI_0020 <- Stats_by_Country_1972_2021 %>%
-  select ("SeN", "CoN", "2000", "2020") %>%
+  select ("SeN", "CoN", "2000", "2019") %>%
   filter(SeN == "GNI per capita, Atlas method (current US$)")
 Tpop_0020 <- Stats_by_Country_1972_2021 %>%
   select ("SeN","2000") %>%
@@ -647,9 +642,9 @@ Big_0020[Big_0020 == '..'] <- NA
 Big_0020 <- Big_0020 %>% 
   drop_na()
 Big_0020 <- Big_0020[!duplicated(as.list(Big_0020))]
-setnames(Big_0020,old = c("2000","2020","2000.1","2000.2","2000.3", "2000.4","2000.5"),new = c("GNI_2000","GNI_2020","Pop_2000","Labor_2000","PUrban_2000","PSec_2000","PTer_2000"))
+setnames(Big_0020,old = c("2000","2019","2000.1","2000.2","2000.3", "2000.4","2000.5"),new = c("GNI_2000","GNI_2019","Pop_2000","Labor_2000","PUrban_2000","PSec_2000","PTer_2000"))
 Big_0020$"GNI_2000" <- as.numeric(Big_0020$"GNI_2000")
-Big_0020$"GNI_2020" <- as.numeric(Big_0020$"GNI_2020")
+Big_0020$"GNI_2019" <- as.numeric(Big_0020$"GNI_2019")
 Big_0020$"Pop_2000" <- as.numeric(Big_0020$"Pop_2000")
 Big_0020$"Labor_2000" <- as.numeric(Big_0020$"Labor_2000")
 Big_0020$"PUrban_2000" <- as.numeric(Big_0020$"PUrban_2000")
@@ -657,13 +652,13 @@ Big_0020$"PSec_2000" <- as.numeric(Big_0020$"PSec_2000")
 Big_0020$"PTer_2000" <- as.numeric(Big_0020$"PTer_2000")
 
 Big_0020 <- Big_0020 %>% 
-  select(c(CoN, GNI_2000, GNI_2020, Pop_2000, Labor_2000, PUrban_2000,PSec_2000,PTer_2000)) %>%
-  mutate(GNI_Growth_2020 = ((GNI_2020-GNI_2000)/GNI_2000)) %>%
+  select(c(CoN, GNI_2000, GNI_2019, Pop_2000, Labor_2000, PUrban_2000,PSec_2000,PTer_2000)) %>%
+  mutate(GNI_Growth_2019 = ((GNI_2019-GNI_2000)/GNI_2000)) %>%
   mutate(Labor_Pop_2000 = (Labor_2000/Pop_2000))%>%
-  select(-c(CoN, GNI_2000, GNI_2020, Pop_2000, Labor_2000))
-Big_0020 <- Big_0020[, c("GNI_Growth_2020","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000")]
+  select(-c(CoN, GNI_2000, GNI_2019, Pop_2000, Labor_2000))
+Big_0020 <- Big_0020[, c("GNI_Growth_2019","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000")]
 
-setnames(Big_0020,old = c("GNI_Growth_2020","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000"),new = c("% GNI Growth","% Labor/Population","% Urban Population","% Secondary Enroll","% Tertiary Enroll"))
+setnames(Big_0020,old = c("GNI_Growth_2019","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000"),new = c("% GNI Growth","% Labor/Population","% Urban Population","% Secondary Enroll","% Tertiary Enroll"))
 
 plot(Big_0020, pch=20, col='steelblue')
 ```

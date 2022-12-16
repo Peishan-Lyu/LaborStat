@@ -77,7 +77,6 @@
 <ul>
 <li class="chapter" data-level="2.1" data-path="proposal.html"><a href="proposal.html#research-topic"><i class="fa fa-check"></i><b>2.1</b> Research topic</a></li>
 <li class="chapter" data-level="2.2" data-path="proposal.html"><a href="proposal.html#data-availability"><i class="fa fa-check"></i><b>2.2</b> Data availability</a></li>
-<li class="chapter" data-level="2.3" data-path="proposal.html"><a href="proposal.html#plots-plan"><i class="fa fa-check"></i><b>2.3</b> Plots plan</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
 <ul>
@@ -117,12 +116,14 @@
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><strong>Data Sources:</strong></p>
 <p>The World Bank’s database “Health Nutrition and Population Statistics” is a collection of a large number of series (fields).
-Different data fields are supplied by different entities:
-* Demographic data fields are mostly collected by United Nations Population Division.
-* Economic data fields are mostly collected by World Bank.
-* Educational data fields are mostly by United Nations Educational, Scientific and Cultural Organization.
-* Medical data fields are mostly by WHO.
-Despite the diverse nature of the data fields, they all fit into a similar framework: one observation per year per country / region / country group.</p>
+Different data fields are supplied by different entities:</p>
+<ul>
+<li>Demographic data fields are mostly collected by United Nations Population Division.</li>
+<li>Economic data fields are mostly collected by World Bank.</li>
+<li>Educational data fields are mostly by United Nations Educational, Scientific and Cultural Organization.</li>
+<li>Medical data fields are mostly by WHO.
+Despite the diverse nature of the data fields, they all fit into a similar framework: one observation per year per country / region / country group.</li>
+</ul>
 <p><strong>Frequency of updates:</strong></p>
 <p>The update is probably on an ad-hoc basis, as difference sources run different schedules.
 (One evidence of update being ad-hoc is: 2021 data is now available for some fields but not for others, and each available field is available for all the countries.)
@@ -149,12 +150,33 @@ Besides the collection of mutually exclusive and collectively exhaustive regions
 <li>Some series (fields) are not available for 2021. Some are observed every 5 years. For each questions, we will choose the most recent year that have good coverage in all the relevant fields.</li>
 </ul>
 <p><strong>Transformation:</strong></p>
-<p>The rows are the Cartesian product of the countries and fields.
-* If we select a single column (year) from the data table, the data is in tidy format. If necessary, we would apply pivot_wider() to send the fields to the columns.
-* If we select multiple columns (years) from the data table, we would first apply pivot_longer() to create a “Year” column and make the data tidy. If necessary, we would then apply pivot_wider() to send the fields to the columns.</p>
+<p>The rows are the Cartesian product of the countries and fields.</p>
+<ul>
+<li>If we select a single column (year) from the data table, the data is in tidy format. If necessary, we would apply pivot_wider() to send the fields to the columns.</li>
+<li>If we select multiple columns (years) from the data table, we would first apply pivot_longer() to create a “Year” column and make the data tidy. If necessary, we would then apply pivot_wider() to send the fields to the columns.</li>
+</ul>
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As discussed above, some series (fields) are not available for 2021. For most of our analysis, the latest data available is 2019 or 2020.</p>
+<p>2019 appears to have much superior data completeness than 2020. However, 2020 already satisfies our needs to answer most of our questions. In each question, we’ll figure out whether to use 2020 or 2019.</p>
+<ul>
+<li>Based on the missing patterns of 2019, the fields with top missing percentages are:
+<ul>
+<li>SP.DYN.SMAM.FE: Age at first marriage, female</li>
+<li>SE.ADT.LITR.ZS: Literacy rate, adult total (% of people ages 15 and above)</li>
+<li>SE.SEC.ENRR: School enrollment, secondary (% gross)</li>
+<li>SE.TER.ENRR.FE: School enrollment, tertiary, female (% gross)</li>
+<li>SE.XPD.TOTL.GD.ZS: Public spending on education, total (% of GDP)</li>
+<li>SE.TER.ENRR: School enrollment, tertiary (% gross)</li>
+</ul></li>
+<li>The first (SP.DYN.SMAM.FE) is only used in our Question 7. For that question, we atually used 2018, thus mitigated the issue. The results show that the relationship is very strong even though 2018 has less than half of the countries available.</li>
+<li>The rest are all education related fields which are only used for Questions 8 and Question 11. We also examined other recent years, but the data completeness is not better. Therefore, we use 2019 for both these questions.</li>
+</ul>
+<p><strong>Missing patterns 2019</strong>
+<img src="finalproj_files/figure-html/unnamed-chunk-5-1.png" width="3840" /></p>
+<p><strong>Missing patterns 2020</strong>
+<img src="finalproj_files/figure-html/unnamed-chunk-6-1.png" width="3840" /></p>
 
 </div>
 </div>
