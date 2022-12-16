@@ -1,2 +1,28 @@
 # Conclusion
 
+**From presentations on current situation and historical trends, we see that:**
+
+* Over the past 5 decades, population has increased the fastest in lower middle income countries, and slowest in high income countries. Region-wise, Sub-Saharan Africa, Middle East & North Africa, and South Asia have had the fastest growth, while Europe & Central Asia and North America were the slowest. East Asia & Pacific, which has the largest chunk of world population, is having a shrinking share.
+* As expected, the regions / countries with fast population growth have high birth rates and younger population.
+* In 1980, countries with high birth rates also tend to have high death rates. The latter does not fully offset the former, thus those countries also have high population growth rates. In 2020, countries with low birth rates tend to have high death rates, because they are large number of old people.
+* Birth rates in 2020 are generally lower than those of 1980. The decrease are more significant for countries with low numbers in 1980.
+* Longevity in 2020 are generally better than those of 1980, The improvements are more significant for countries with low life expectancy in 1980.
+* South Asia and East Asia & Pacific has the most extreme birth gender bias (towards boys). Some Eastern European countries have the largest gap in women's and men's longevity, while some underdeveloped countries have the smallest gap.
+
+**From the exploration on patterns and relationships, we found that:**
+
+* Birth rate and women's age at first marriage are almost perfectly negatively correlated, while the positive correlation between birth rate and % young women only appeared in more recent years.
+* Birth rate is negatively correlated with income level and female college enrollment rate.
+* Longevity is strongly positively correlated with income level.
+* Lower income countries have significantly higher percentage of deaths caused by communicable diseases.
+* Economic growth rate in 2019 is not very correlated with labor quality.
+
+**Limitations and future directions:**
+
+Due to the data completeness issue of some of the non-demographic factors (e.g. education, government policy), there is limitation in our study of the interrelationship between demographic and non-demographic factors. One improvement can be finding better data source (better structure, more dimensions, more completeness) for the non-demographic factors.
+
+Immigration may be another interesting aspect, as immigrants is now taking an increasingly big portion of the population in some countries. We haven't touched on this area due to limitation.
+
+
+
+

@@ -57,7 +57,7 @@ colnames(Stats_by_Country_1972_2021) <- substring(colnames(Stats_by_Country_1972
 
 ## Current situation and historical trends
 
-**Question 1: How have the world population by income category and by region evolved over the past decades?**
+**Question 1: How have the world population by country income category and by region evolved over the past decades?**
 
 ```{r}
 Income_Population <- Stats_by_Income_1972_2021 %>%
@@ -503,7 +503,7 @@ ggplot(data = BirthRate_AgeMarriage_Country) +
   geom_point(aes(x = SP.DYN.SMAM.FE, y = SP.DYN.CBRT.IN), color = '#619CFF', alpha = 0.7, size = 3) +
   geom_text(aes(x = SP.DYN.SMAM.FE, y = SP.DYN.CBRT.IN - 1, label = CoC), size = 3) +
   facet_wrap(~ Year) +
-  labs(title = "Birth Rate per 1,000 people ~ Women's Age at First Marriage", x = "Women's Age at First Marriage', y = 'Birth Rate per 1,000 people") +
+  labs(title = "Birth Rate per 1,000 people ~ Women's Age at First Marriage", x = "Women's Age at First Marriage", y = "Birth Rate per 1,000 people") +
   theme(text = element_text(size=20))
 
 ```
@@ -550,7 +550,7 @@ draw_biplot(BirthRate_OtherFactors_Country)
 
 
 <br>
-**Question 9: How does income category affect longevity?**
+**Question 9: How does country income category affect longevity?**
 
 ```{r}
 Income_Lexpect <- Stats_by_Income_1972_2021 %>%
@@ -571,7 +571,7 @@ ggplot(Income_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color 
   geom_line()+
   geom_point()+
   ylab("Life Expectancy at Birth")+
-  ggtitle("Life Expectancy by Country Income Category") +
+  ggtitle("Life Expectancy by Country Income Category (1972 - 2020)") +
   guides(color = guide_legend('Country Income Category'))
 ```
 
@@ -579,7 +579,7 @@ ggplot(Income_Lexpect_clean, aes(x = Years, y = Life_expectancy_at_birth, color 
 
 
 <br>
-**Question 10: How does income category affect death rates of difference causes?**
+**Question 10: How does country income category affect death percentages of difference causes?**
 
 ```{r}
 ##################################
@@ -612,7 +612,7 @@ ggplot(Income_Cdeath, aes(x = fct_reorder2(CoN, SeN == "Communicable Diseases", 
 
 
 <br>
-**Question 11 How do labor force and quality affect economic development?**
+**Question 11: How do labor quality affect economic development?**
 
 ```{r}
 GNI_0020 <- Stats_by_Country_1972_2021 %>%
@@ -660,7 +660,7 @@ Big_0020 <- Big_0020[, c("GNI_Growth_2019","Labor_Pop_2000","PUrban_2000","PSec_
 
 setnames(Big_0020,old = c("GNI_Growth_2019","Labor_Pop_2000","PUrban_2000","PSec_2000","PTer_2000"),new = c("% GNI Growth","% Labor/Population","% Urban Population","% Secondary Enroll","% Tertiary Enroll"))
 
-plot(Big_0020, pch=20, col='steelblue')
+plot(Big_0020, pch=20, col='steelblue', main = "Scatterplot Matrix - Income Growth Rate vs. Labor Quality")
 ```
 
 

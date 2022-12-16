@@ -4,7 +4,7 @@
 
 The first objective of this project is to highlight the current situation and historical trends. This shows us where we are, and where we have come from. These are the aspects we want to present:
 
-* How have the world population by income category and by region evolved over the past decades?
+* How have the world population by country income category and by region evolved over the past decades?
 * Which regions have the youngest / oldest population?
 * Which regions have had the highest / lowest birth rate, death rate, and population growth?
 * How have birth rates changed cross-sectionally by country?
@@ -15,18 +15,19 @@ The second objective of this project is to look for patterns and relationships a
 
 * How do other demographic factors affect birth rate?
 * How do non-demographic factors (economic, healthcare, and education) affect birth rate?
-* How does income category affect longevity?
-* How does income category affect death rates of difference causes?
-* How do labor force and quality affect economic development?
+* How does country income category affect longevity?
+* How does country income category affect death percentages of difference causes?
+* How do labor quality affect economic development?
 
 
 ## Data availability
 
 To answer the questions in the previous section, we need periodic data in various demographic and non-demographic statistics, broken down into regions and countries. The data should cover fields such as:
+
 * Demographic: population by gender and age group, birth rate, death rate, life expectancy
 * Economic: gdp per capita, income per capita, economic growth
 * Social: education, healthcare, and government policies
 
-A reliable data source that serves our purposes is the World Bank’s database “Health Nutrition and Population Statistics” (https://databank.worldbank.org/source/health-nutrition-and-population-statistics). They maintain comprehensive demographic and non-demographic data covering the aspects mentioned above.
+A reliable data source that serves our purposes is the World Bank’s database “Health Nutrition and Population Statistics” (https://databank.worldbank.org/source/health-nutrition-and-population-statistics). It stores comprehensive demographic and non-demographic data covering the aspects mentioned above.
 
 The data can be downloaded as spreadsheet from the interface, by specifying filters on country, series (field), and year. Data can be imported to RStudio from the spreadsheet.

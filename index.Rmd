@@ -7,9 +7,12 @@ site: bookdown::bookdown_site
 
 # Introduction
 
-Demographics might not be the hottest buzzword today in Economics or Sociology, but has always been an area of great significance, due to the humongous influence that it exerts to human societies over the long horizon, both in the past and in the future.
+Demographics might not be the hottest buzzword today in Economics or Sociology, but it has always been an area of great significance, due to the humongous influence that it exerts to human societies over the long horizon, both in the past and in the future.
+
 Some statements on demographics are very well known, such as: Europe, Russia and Japan have been suffering low birth rate and aging population problems which may impede their prosperity in the coming decades. Some forecasts are surprising, such as the one shown in class (“Spatial Data” section): By 2100, Africa’s population will overtake Asia which used to be home of 2/3 of world population just two centuries ago. Some recent developments are eyecatching, such as: world population reached 8 billion in 2022, and that India’s population is set to surpass China’s in 2023.
 
 In this project, we aim to achieve two goals, in a visualization approach:
-1. Highlight the current situation of world demographics, and the historical trends of the past decades, by region and country.
+
+1. Highlight the current situation of world demographics, and the historical trends of the past decades, by region, country, and country income category.
+
 2. Look for patterns and relationships, both among demographic factors, and between demographic factors and other indicators (e.g. economic, educational, medical).
